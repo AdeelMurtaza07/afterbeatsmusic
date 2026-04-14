@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>After Beats Music</title>
+  <meta name="description" content="After Beats Music — Dark beats. Raw energy. Your sound. Connecting producers and artists worldwide through curated music." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Loader -->
+  <div id="loader">
+    <div class="loader-inner">
+      <svg class="loader-logo" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="30" cy="30" r="28" stroke="#7C3AED" stroke-width="2" stroke-dasharray="176" stroke-dashoffset="176">
+          <animate attributeName="stroke-dashoffset" from="176" to="0" dur="1.2s" fill="freeze" />
+        </circle>
+        <text x="50%" y="54%" dominant-baseline="middle" text-anchor="middle" fill="#fff" font-size="11" font-family="Inter" font-weight="700">ABM</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Header -->
+  <header id="header">
+    <div class="header-inner">
+      <a href="#" class="logo">
+        <span class="logo-text">after<span class="logo-accent">beats</span>music</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="nav" id="nav">
+        <ul class="nav-list">
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li class="has-dropdown">
+            <a href="#channels" class="nav-link">Channels <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></a>
+            <div class="dropdown">
+              <div class="dropdown-col">
+                <span class="dropdown-heading">By Region</span>
+                <a href="#">USA</a>
+                <a href="#">UK</a>
+                <a href="#">Canada</a>
+                <a href="#">Nigeria</a>
+                <a href="#">Australia</a>
+                <a href="#">South Africa</a>
+                <a href="#">Brazil</a>
+                <a href="#">Jamaica</a>
+              </div>
+              <div class="dropdown-col">
+                <span class="dropdown-heading">By Genre</span>
+                <a href="#">Hip-Hop</a>
+                <a href="#">Trap</a>
+                <a href="#">Lo-fi</a>
+                <a href="#">Drill</a>
+                <a href="#">Afrobeats</a>
+                <a href="#">Boom Bap</a>
+                <a href="#">Neo Soul</a>
+                <a href="#">Phonk</a>
+              </div>
+              <div class="dropdown-col">
+                <span class="dropdown-heading">By Type</span>
+                <a href="#">Beats</a>
+                <a href="#">Instrumentals</a>
+                <a href="#">Samples</a>
+                <a href="#">Producers</a>
+                <a href="#">Artists</a>
+                <a href="#">R&B</a>
+                <a href="#">Jazz Hop</a>
+                <a href="#">Latin Trap</a>
+              </div>
+            </div>
+          </li>
+          <li><a href="#submit" class="nav-link">Submit Demo</a></li>
+          <li><a href="#hof" class="nav-link">Hall of Fame</a></li>
+          <li><a href="#contact" class="nav-link nav-cta">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero-bg">
+        <div class="hero-gradient"></div>
+        <div class="hero-grid"></div>
+      </div>
+      <div class="container">
+        <div class="hero-content">
+          <div class="hero-badge">
+            <span class="badge-dot"></span>
+            Now Accepting Submissions
+          </div>
+          <h1 class="hero-title">
+            Dark beats.<br />
+            Raw energy.<br />
+            <span class="hero-accent">Your sound.</span>
+          </h1>
+          <p class="hero-sub">The home of independent producers and artists who create with intention. Curated music for listeners who feel every note.</p>
+          <div class="hero-actions">
+            <a href="#" class="btn btn-primary">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><polygon points="5,3 19,12 5,21" fill="currentColor"/></svg>
+              Listen Now
+            </a>
+            <a href="#submit" class="btn btn-ghost">Submit Your Track</a>
+          </div>
+          <div class="hero-stats">
+            <div class="hero-stat">
+              <strong>5B+</strong>
+              <span>Total Streams</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+              <strong>3,000+</strong>
+              <span>Curated Releases</span>
+            </div>
+            <div class="hero-stat-divider"></div>
+            <div class="hero-stat">
+              <strong>12M+</strong>
+              <span>Monthly Listeners</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-scroll-hint">
+        <div class="scroll-line"></div>
+        <span>Scroll</span>
+      </div>
+    </section>
+
+    <!-- Marquee -->
+    <div class="marquee-wrap">
+      <div class="marquee-track">
+        <span>Hip-Hop</span><span class="dot">·</span>
+        <span>Trap</span><span class="dot">·</span>
+        <span>Lo-fi</span><span class="dot">·</span>
+        <span>Drill</span><span class="dot">·</span>
+        <span>Afrobeats</span><span class="dot">·</span>
+        <span>Phonk</span><span class="dot">·</span>
+        <span>Boom Bap</span><span class="dot">·</span>
+        <span>Neo Soul</span><span class="dot">·</span>
+        <span>Jazz Hop</span><span class="dot">·</span>
+        <span>Latin Trap</span><span class="dot">·</span>
+        <span>UK Drill</span><span class="dot">·</span>
+        <span>R&B</span><span class="dot">·</span>
+        <span>Cloud Rap</span><span class="dot">·</span>
+        <span>Hip-Hop</span><span class="dot">·</span>
+        <span>Trap</span><span class="dot">·</span>
+        <span>Lo-fi</span><span class="dot">·</span>
+        <span>Drill</span><span class="dot">·</span>
+        <span>Afrobeats</span><span class="dot">·</span>
+        <span>Phonk</span><span class="dot">·</span>
+        <span>Boom Bap</span><span class="dot">·</span>
+        <span>Neo Soul</span><span class="dot">·</span>
+        <span>Jazz Hop</span><span class="dot">·</span>
+        <span>Latin Trap</span><span class="dot">·</span>
+        <span>UK Drill</span><span class="dot">·</span>
+        <span>R&B</span><span class="dot">·</span>
+        <span>Cloud Rap</span><span class="dot">·</span>
+      </div>
+    </div>
+
+    <!-- About -->
+    <section class="about section" id="about">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-text">
+            <span class="section-label">Who We Are</span>
+            <h2 class="section-title">Over 8 years of curating music for more than <span class="accent">12 million</span> quality listeners.</h2>
+            <p class="section-body">After Beats Music was built for artists who make music with purpose — not algorithms. We connect underground producers, beatmakers, and independent artists with listeners who actually care about the craft.</p>
+            <p class="section-body">From late-night trap sessions to soulful lo-fi sessions, we represent every corner of the beat culture.</p>
+            <a href="#submit" class="btn btn-primary mt-md">Get Featured</a>
+          </div>
+          <div class="about-visual">
+            <div class="about-card">
+              <div class="about-card-inner">
+                <div class="waveform">
+                  <div class="wave-bar" style="--h:30%"></div>
+                  <div class="wave-bar" style="--h:60%"></div>
+                  <div class="wave-bar" style="--h:45%"></div>
+                  <div class="wave-bar" style="--h:80%"></div>
+                  <div class="wave-bar" style="--h:55%"></div>
+                  <div class="wave-bar" style="--h:90%"></div>
+                  <div class="wave-bar" style="--h:70%"></div>
+                  <div class="wave-bar" style="--h:40%"></div>
+                  <div class="wave-bar" style="--h:65%"></div>
+                  <div class="wave-bar" style="--h:85%"></div>
+                  <div class="wave-bar" style="--h:50%"></div>
+                  <div class="wave-bar" style="--h:75%"></div>
+                  <div class="wave-bar" style="--h:35%"></div>
+                  <div class="wave-bar" style="--h:60%"></div>
+                  <div class="wave-bar" style="--h:95%"></div>
+                  <div class="wave-bar" style="--h:55%"></div>
+                  <div class="wave-bar" style="--h:40%"></div>
+                  <div class="wave-bar" style="--h:70%"></div>
+                  <div class="wave-bar" style="--h:80%"></div>
+                  <div class="wave-bar" style="--h:45%"></div>
+                </div>
+                <div class="now-playing">
+                  <div class="np-disc"></div>
+                  <div class="np-info">
+                    <strong>Night Drive 808</strong>
+                    <span>afterbeatsmusic · 2:47</span>
+                  </div>
+                  <button class="np-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><polygon points="5,3 19,12 5,21" fill="currentColor"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Partners -->
+    <section class="partners section-sm">
+      <div class="container">
+        <p class="partners-label">Trusted & Distributed Through</p>
+        <div class="partners-grid">
+          <div class="partner-item">DistroKid</div>
+          <div class="partner-item">TuneCore</div>
+          <div class="partner-item">CD Baby</div>
+          <div class="partner-item">Amuse</div>
+          <div class="partner-item">Stem</div>
+          <div class="partner-item">UnitedMasters</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats section" id="stats">
+      <div class="container">
+        <div class="stats-header">
+          <span class="section-label">By The Numbers</span>
+          <h2 class="section-title">Numbers that speak for<br /><span class="accent">the music.</span></h2>
+        </div>
+        <div class="stats-grid">
+          <div class="stat-card" data-count="5000000000" data-suffix="+ Streams">
+            <div class="stat-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M9 19V6l12-3v13" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="6" cy="19" r="3" stroke="#7C3AED" stroke-width="1.5"/><circle cx="18" cy="16" r="3" stroke="#7C3AED" stroke-width="1.5"/></svg>
+            </div>
+            <div class="stat-value" data-target="5" data-suffix="B+">0</div>
+            <div class="stat-label">Total Streams</div>
+            <div class="stat-sub">Across all platforms</div>
+          </div>
+          <div class="stat-card" data-count="3000" data-suffix="+ Releases">
+            <div class="stat-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1" stroke="#7C3AED" stroke-width="1.5"/><rect x="14" y="3" width="7" height="7" rx="1" stroke="#7C3AED" stroke-width="1.5"/><rect x="3" y="14" width="7" height="7" rx="1" stroke="#7C3AED" stroke-width="1.5"/><rect x="14" y="14" width="7" height="7" rx="1" stroke="#7C3AED" stroke-width="1.5"/></svg>
+            </div>
+            <div class="stat-value" data-target="3000" data-suffix="+">0</div>
+            <div class="stat-label">Curated Releases</div>
+            <div class="stat-sub">Handpicked tracks only</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#7C3AED" stroke-width="1.5"/><path d="M12 7v5l3 3" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="stat-value">24/7</div>
+            <div class="stat-label">Beat Discovery</div>
+            <div class="stat-sub">Always searching</div>
+          </div>
+          <div class="stat-card" data-count="12000000">
+            <div class="stat-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="#7C3AED" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 0 0-3-3.87" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/><path d="M16 3.13a4 4 0 0 1 0 7.75" stroke="#7C3AED" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="stat-value" data-target="12" data-suffix="M+">0</div>
+            <div class="stat-label">Monthly Listeners</div>
+            <div class="stat-sub">Real music fans</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Hall of Fame -->
+    <section class="hof section" id="hof">
+      <div class="container">
+        <div class="hof-header">
+          <span class="section-label">Hall of Fame</span>
+          <h2 class="section-title">Artists who moved<br /><span class="accent">the culture.</span></h2>
+          <p class="section-body">These are some of the artists and producers who've been featured through our platform and gone on to make waves in the industry.</p>
+        </div>
+        <div class="hof-grid">
+          <div class="hof-card">
+            <div class="hof-avatar" style="background: linear-gradient(135deg, #7C3AED, #2563EB);">
+              <span>KV</span>
+            </div>
+            <div class="hof-info">
+              <strong>KVN Beats</strong>
+              <span>Trap · USA</span>
+            </div>
+            <div class="hof-badge">Featured</div>
+          </div>
+          <div class="hof-card">
+            <div class="hof-avatar" style="background: linear-gradient(135deg, #DC2626, #7C3AED);">
+              <span>MX</span>
+            </div>
+            <div class="hof-info">
+              <strong>Maxx Solis</strong>
+              <span>Latin Trap · Mexico</span>
+            </div>
+            <div class="hof-badge">Featured</div>
+          </div>
+          <div class="hof-card">
+            <div class="hof-avatar" style="background: linear-gradient(135deg, #059669, #2563EB);">
+              <span>LF</span>
+            </div>
+            <div class="hof-info">
+              <strong>Lena Forest</strong>
+              <span>Lo-fi · UK</span>
+            </div>
+            <div class="hof-badge">Featured</div>
+          </div>
+          <div class="hof-card">
+            <div class="hof-avatar" style="background: linear-gradient(135deg, #D97706, #DC2626);">
+              <span>AB</span>
+            </div>
+            <div class="hof-info">
+              <strong>Afro Blaze</strong>
+              <span>Afrobeats · Nigeria</span>
+            </div>
+            <div class="hof-badge">Featured</div>
+          </div>
+          <div class="hof-card">
+            <div class="hof-avatar" style="background: linear-gradient(135deg, #0891B2, #7C3AED);">
+              <span>ZD</span>
+            </div>
+            <div class="hof-info">
+              <strong>Zero Depth</strong>
+              <span>Drill · Canada</span>
+            </div>
+            <div class="hof-badge">Featured</div>
+          </div>
+          <div class="hof-card">
+            <div class="hof-avatar" style="background: linear-gradient(135deg, #7C3AED, #059669);">
+              <span>RK</span>
+            </div>
+            <div class="hof-info">
+              <strong>Rao Kenz</strong>
+              <span>Boom Bap · Australia</span>
+            </div>
+            <div class="hof-badge">Featured</div>
+          </div>
+          <div class="hof-card">
+            <div class="hof-avatar" style="background: linear-gradient(135deg, #9D174D, #7C3AED);">
+              <span>SC</span>
+            </div>
+            <div class="hof-info">
+              <strong>Soul Cipher</strong>
+              <span>Neo Soul · USA</span>
+            </div>
+            <div class="hof-badge">Featured</div>
+          </div>
+          <div class="hof-card">
+            <div class="hof-avatar" style="background: linear-gradient(135deg, #1D4ED8, #0891B2);">
+              <span>DX</span>
+            </div>
+            <div class="hof-info">
+              <strong>Dx Phonk</strong>
+              <span>Phonk · Russia</span>
+            </div>
+            <div class="hof-badge">Featured</div>
+          </div>
+          <div class="hof-card hof-more">
+            <div class="hof-more-inner">
+              <span class="hof-more-count">+120</span>
+              <span class="hof-more-text">More Artists</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery section" id="gallery">
+      <div class="container">
+        <span class="section-label">The Culture</span>
+        <h2 class="section-title mb-lg">Where the <span class="accent">music lives.</span></h2>
+        <div class="gallery-grid">
+          <div class="gallery-item gi-tall" style="background: linear-gradient(160deg, #0f0f0f 0%, #1a0a2e 100%);">
+            <div class="gallery-overlay">
+              <span>Studio Sessions</span>
+            </div>
+            <div class="gallery-visual">
+              <div class="vinyl-anim"></div>
+            </div>
+          </div>
+          <div class="gallery-item" style="background: linear-gradient(160deg, #0f0f0f 0%, #0a1628 100%);">
+            <div class="gallery-overlay">
+              <span>Live Events</span>
+            </div>
+            <div class="gallery-eq">
+              <div class="eq-bar"></div>
+              <div class="eq-bar"></div>
+              <div class="eq-bar"></div>
+              <div class="eq-bar"></div>
+              <div class="eq-bar"></div>
+            </div>
+          </div>
+          <div class="gallery-item" style="background: linear-gradient(160deg, #0f0f0f 0%, #0a1f0a 100%);">
+            <div class="gallery-overlay">
+              <span>Producer Spotlight</span>
+            </div>
+            <div class="gallery-waveform">
+              <svg viewBox="0 0 200 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M0 30 Q10 10 20 30 T40 30 T60 30 T80 30 T100 30 T120 30 T140 30 T160 30 T180 30 T200 30" stroke="#7C3AED" stroke-width="2" fill="none" opacity="0.6"/>
+                <path d="M0 30 Q10 50 20 30 T40 30 T60 30 T80 30 T100 30 T120 30 T140 30 T160 30 T180 30 T200 30" stroke="#4F46E5" stroke-width="1.5" fill="none" opacity="0.4"/>
+              </svg>
+            </div>
+          </div>
+          <div class="gallery-item gi-wide" style="background: linear-gradient(160deg, #0f0f0f 0%, #1f0a0a 100%);">
+            <div class="gallery-overlay">
+              <span>Beat Drops</span>
+            </div>
+            <div class="gallery-circles">
+              <div class="g-circle c1"></div>
+              <div class="g-circle c2"></div>
+              <div class="g-circle c3"></div>
+            </div>
+          </div>
+          <div class="gallery-item" style="background: linear-gradient(160deg, #0f0f0f 0%, #1a1a00 100%);">
+            <div class="gallery-overlay">
+              <span>Artist Features</span>
+            </div>
+            <div class="gallery-dots">
+              <div class="g-dot" style="--x:20%;--y:40%"></div>
+              <div class="g-dot" style="--x:55%;--y:25%"></div>
+              <div class="g-dot" style="--x:70%;--y:60%"></div>
+              <div class="g-dot" style="--x:35%;--y:70%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Submit Demo -->
+    <section class="submit section" id="submit">
+      <div class="container">
+        <div class="submit-grid">
+          <div class="submit-info">
+            <span class="section-label">Submit Your Demo</span>
+            <h2 class="section-title">Ready to be<br /><span class="accent">heard?</span></h2>
+            <p class="section-body">We listen to every submission. If your track matches our standards of quality and authenticity, you'll hear from us within 7–14 business days.</p>
+            <ul class="submit-bullets">
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                All genres welcome
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Independent & signed artists
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                No upfront fees
+              </li>
+              <li>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Fast response time
+              </li>
+            </ul>
+          </div>
+
+          <form class="submit-form" id="submitForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="name">Your Name *</label>
+                <input type="text" id="name" name="name" placeholder="John Doe" required />
+                <span class="form-error">Please enter your name</span>
+              </div>
+              <div class="form-group">
+                <label for="email">Email Address *</label>
+                <input type="email" id="email" name="email" placeholder="you@example.com" required />
+                <span class="form-error">Please enter a valid email</span>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="artist">Artist / Producer Name *</label>
+                <input type="text" id="artist" name="artist" placeholder="Stage name" required />
+                <span class="form-error">Please enter your artist name</span>
+              </div>
+              <div class="form-group">
+                <label for="track">Track Name *</label>
+                <input type="text" id="track" name="track" placeholder="Track title" required />
+                <span class="form-error">Please enter the track name</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="link">Streaming / Demo Link *</label>
+              <input type="url" id="link" name="link" placeholder="SoundCloud, YouTube, Spotify, etc." required />
+              <span class="form-error">Please enter a valid URL</span>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="genre">Genre *</label>
+                <div class="select-wrap">
+                  <select id="genre" name="genre" required>
+                    <option value="">Select genre</option>
+                    <option>Hip-Hop</option>
+                    <option>Trap</option>
+                    <option>Lo-fi</option>
+                    <option>Drill</option>
+                    <option>UK Drill</option>
+                    <option>Afrobeats</option>
+                    <option>Boom Bap</option>
+                    <option>Phonk</option>
+                    <option>Neo Soul</option>
+                    <option>Jazz Hop</option>
+                    <option>Latin Trap</option>
+                    <option>R&B</option>
+                    <option>Cloud Rap</option>
+                    <option>Other</option>
+                  </select>
+                  <svg class="select-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <span class="form-error">Please select a genre</span>
+              </div>
+              <div class="form-group">
+                <label for="type">Artist Type *</label>
+                <div class="select-wrap">
+                  <select id="type" name="type" required>
+                    <option value="">Select type</option>
+                    <option>Independent Artist</option>
+                    <option>Producer / Beatmaker</option>
+                    <option>Signed Artist</option>
+                    <option>Label / Management</option>
+                    <option>Other</option>
+                  </select>
+                  <svg class="select-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+                </div>
+                <span class="form-error">Please select a type</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="channel">Preferred Channel</label>
+              <div class="select-wrap">
+                <select id="channel" name="channel">
+                  <option value="">Select channel (optional)</option>
+                  <option>AfterBeats Main</option>
+                  <option>AfterBeats Trap</option>
+                  <option>AfterBeats Lo-fi</option>
+                  <option>AfterBeats Drill</option>
+                  <option>AfterBeats Afrobeats</option>
+                  <option>AfterBeats Phonk</option>
+                  <option>AfterBeats Boom Bap</option>
+                  <option>AfterBeats Neo Soul</option>
+                  <option>AfterBeats USA</option>
+                  <option>AfterBeats UK</option>
+                  <option>AfterBeats Nigeria</option>
+                  <option>AfterBeats Latin</option>
+                </select>
+                <svg class="select-arrow" width="14" height="14" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="message">Additional Notes</label>
+              <textarea id="message" name="message" rows="3" placeholder="Tell us about your sound, influences, or anything we should know..."></textarea>
+            </div>
+            <div class="form-checks">
+              <label class="checkbox-label">
+                <input type="checkbox" id="terms" name="terms" required />
+                <span class="checkbox-box"></span>
+                I agree to the <a href="#" class="link-inline">Terms of Service</a> and <a href="#" class="link-inline">Privacy Policy</a>
+              </label>
+              <label class="checkbox-label">
+                <input type="checkbox" id="rights" name="rights" required />
+                <span class="checkbox-box"></span>
+                I confirm I own or have rights to this music
+              </label>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M22 2L15 22l-4-9-9-4 20-7z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Submit Your Demo
+            </button>
+            <div class="form-success" id="formSuccess">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M20 6L9 17l-5-5" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <div>
+                <strong>Submission received!</strong>
+                <span>We'll review your track and get back to you within 7–14 days.</span>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section class="contact section" id="contact">
+      <div class="container">
+        <div class="contact-inner">
+          <span class="section-label">Get In Touch</span>
+          <h2 class="section-title">Let's build<br /><span class="accent">something together.</span></h2>
+          <p class="section-body">Whether you're an artist, label, brand, or just a music lover — we'd love to connect.</p>
+          <a href="mailto:contact@afterbeatsmusic.com" class="contact-email">
+            contact@afterbeatsmusic.com
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <div class="socials">
+            <a href="#" class="social-btn" aria-label="YouTube">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M21.8 8s-.2-1.4-.8-2c-.8-.8-1.6-.9-2-.9C16.6 5 12 5 12 5s-4.6 0-7 .1c-.4.1-1.2.1-2 .9-.6.6-.8 2-.8 2S2 9.6 2 11.2v1.5c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.8.8 1.8.8 2.3.9C6.8 19 12 19 12 19s4.6 0 7-.1c.4-.1 1.2-.1 2-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.5C22 9.6 21.8 8 21.8 8zM9.7 14.5v-5.5l5.5 2.8-5.5 2.7z"/></svg>
+            </a>
+            <a href="#" class="social-btn" aria-label="Instagram">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="#" class="social-btn" aria-label="X / Twitter">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="#" class="social-btn" aria-label="SoundCloud">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M1.175 12.225c-.015.132-.025.264-.025.4 0 .135.01.266.025.4l-.025-.8zm.8 2.65c.267 0 .5-.067.7-.2a1.25 1.25 0 0 0 .475-.55 5.875 5.875 0 0 0 3.35 1.025 5.9 5.9 0 0 0 5.9-5.9 5.9 5.9 0 0 0-.55-2.5 3.6 3.6 0 0 0-1.025.2 4.65 4.65 0 0 1 .325 1.7 4.65 4.65 0 0 1-4.65 4.65 4.65 4.65 0 0 1-2.675-.85c-.025.05-.05.1-.1.125-.15.1-.325.15-.525.15a1 1 0 0 1-1-1 1 1 0 0 1 1-1c.125 0 .25.025.35.075A4.625 4.625 0 0 1 6.3 9.7c0-2.575 2.075-4.65 4.65-4.65 1.15 0 2.2.42 3.025 1.1a7.2 7.2 0 0 1 3.025-.65 7.25 7.25 0 0 1 7.25 7.25 7.25 7.25 0 0 1-7.25 7.25H2a1.25 1.25 0 0 1 0-2.5h-.025z"/></svg>
+            </a>
+            <a href="#" class="social-btn" aria-label="Spotify">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#" class="logo logo-footer">
+            <span class="logo-text">after<span class="logo-accent">beats</span>music</span>
+          </a>
+          <p class="footer-tagline">Dark beats. Raw energy. Your sound.</p>
+          <p class="footer-location">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#666" stroke-width="1.5"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" stroke="#666" stroke-width="1.5"/></svg>
+            The Internet, Worldwide
+          </p>
+        </div>
+        <div class="footer-col">
+          <h4>Navigate</h4>
+          <a href="#hero">Home</a>
+          <a href="#about">About</a>
+          <a href="#hof">Hall of Fame</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#contact">Contact</a>
+        </div>
+        <div class="footer-col">
+          <h4>Channels</h4>
+          <a href="#">Hip-Hop</a>
+          <a href="#">Trap</a>
+          <a href="#">Lo-fi</a>
+          <a href="#">Afrobeats</a>
+          <a href="#">Drill</a>
+          <a href="#">Phonk</a>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#submit">Submit Demo</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>&copy; 2025 After Beats Music. All rights reserved.</p>
+        <div class="footer-socials">
+          <a href="#" aria-label="YouTube">YT</a>
+          <a href="#" aria-label="Instagram">IG</a>
+          <a href="#" aria-label="X">X</a>
+          <a href="#" aria-label="SoundCloud">SC</a>
+          <a href="#" aria-label="Spotify">SP</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
