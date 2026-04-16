@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-barba="wrapper">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Top 25 Hall of Fame — afterbeatsmusic</title>
+  <meta name="description" content="The top 25 most iconic releases on afterbeatsmusic. Ranked by combined views across our network." />
+  <link href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700,800,900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- Page Loader -->
+  <div class="page-loader" id="pageLoader">
+    <span class="loader-logo">afterbeatsmusic</span>
+  </div>
+
+  <!-- Barba overlay -->
+  <div class="barba-overlay" id="barbaOverlay"></div>
+
+  <!-- ══ NAVIGATION ══════════════════════════════════════ -->
+  <nav class="master-nav scrolled" id="masterNav" role="navigation">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">afterbeatsmusic</a>
+      <div class="nav-links">
+        <div class="nav-dd-wrap">
+          <button class="nav-dd-btn" aria-expanded="false">
+            Channels
+            <svg class="nav-chevron" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-dd-menu">
+            <div>
+              <span class="nav-dd-col-label">National</span>
+              <a href="#" class="nav-dd-item">afterbeatsmusic</a>
+              <a href="#" class="nav-dd-item">USA</a><a href="#" class="nav-dd-item">Canada</a>
+              <a href="#" class="nav-dd-item">UK</a><a href="#" class="nav-dd-item">Indonesia</a>
+              <a href="#" class="nav-dd-item">Poland</a><a href="#" class="nav-dd-item">Argentina</a>
+              <a href="#" class="nav-dd-item">Sweden</a><a href="#" class="nav-dd-item">Mexico</a>
+              <a href="#" class="nav-dd-item">Australia</a><a href="#" class="nav-dd-item">Germany</a>
+              <a href="#" class="nav-dd-item">France</a><a href="#" class="nav-dd-item">Brazil</a>
+              <a href="#" class="nav-dd-item">Italy</a><a href="#" class="nav-dd-item">Philippines</a>
+              <a href="#" class="nav-dd-item">Hindi</a>
+            </div>
+            <div>
+              <span class="nav-dd-col-label">Genres</span>
+              <a href="#" class="nav-dd-item">K-Pop</a><a href="#" class="nav-dd-item">Afro House</a>
+              <a href="#" class="nav-dd-item">Acoustic</a><a href="#" class="nav-dd-item">Indie</a>
+              <a href="#" class="nav-dd-item">Tech House</a><a href="#" class="nav-dd-item">Trance</a>
+              <a href="#" class="nav-dd-item">Tropical</a><a href="#" class="nav-dd-item">Lo-fi</a>
+              <a href="#" class="nav-dd-item">Techno</a><a href="#" class="nav-dd-item">Trap</a>
+              <a href="#" class="nav-dd-item">Drum &amp; Bass</a><a href="#" class="nav-dd-item">Phonk</a>
+              <a href="#" class="nav-dd-item">Afrobeats</a><a href="#" class="nav-dd-item">R&amp;B</a>
+              <a href="#" class="nav-dd-item">Country</a><a href="#" class="nav-dd-item">Rap</a>
+              <a href="#" class="nav-dd-item">Latin</a><a href="#" class="nav-dd-item">Chill</a>
+              <a href="#" class="nav-dd-item">Rock</a>
+            </div>
+          </div>
+        </div>
+        <a href="contact.html" class="nav-link">Contact</a>
+        <a href="hall-of-fame.html" class="nav-link" aria-current="page">Hall of Fame</a>
+        <a href="index.html#submit" class="nav-link nav-link-cta">Submit Demo</a>
+      </div>
+      <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
+        <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
+    <div class="mobile-nav-links">
+      <a href="contact.html" class="mobile-nav-link">Contact</a>
+      <a href="hall-of-fame.html" class="mobile-nav-link">Hall of Fame</a>
+      <a href="index.html#submit" class="mobile-nav-cta">Submit Demo</a>
+    </div>
+    <div class="mobile-channels-label">Channels</div>
+    <div class="mobile-channels-grid">
+      <a href="#">afterbeatsmusic</a><a href="#">USA</a><a href="#">UK</a>
+      <a href="#">Canada</a><a href="#">Brazil</a><a href="#">Australia</a>
+      <a href="#">K-Pop</a><a href="#">Lo-fi</a><a href="#">Trap</a>
+      <a href="#">Afrobeats</a><a href="#">R&amp;B</a><a href="#">Phonk</a>
+    </div>
+  </div>
+
+  <!-- ══ MAIN ════════════════════════════════════════════ -->
+  <main data-barba="container" data-barba-namespace="hall-of-fame" style="padding-top: var(--nav-h);">
+
+    <!-- ── Stats Bar ── -->
+    <div class="hof-stats-bar">
+      <div class="hof-stats-bar-inner">
+        <span class="hof-bar-logo">afterbeatsmusic</span>
+        <div class="hof-bar-divider"></div>
+        <span class="hof-bar-title">Top 25 Hall of Fame</span>
+        <div class="hof-bar-divider"></div>
+        <span class="hof-bar-views">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <strong id="totalViews">6.7B</strong> combined views
+        </span>
+      </div>
+    </div>
+
+    <!-- ── 3D Sphere Viewer ── -->
+    <section class="hof-sphere-section">
+      <div class="hof-sphere-viewer" id="hofSphere" role="application" aria-label="Interactive 3D gallery. Click and drag to rotate.">
+        <div class="hof-camera" id="hofCamera">
+          <div class="hof3d-card hof-c1"  data-ring="0" data-col="0" data-rank="1"><span class="hof3d-rank">#01 · 842M</span><div class="hof3d-meta"><h3 class="hof3d-title">Midnight Frequencies</h3><p class="hof3d-artist">Nova Beats</p></div></div>
+          <div class="hof3d-card hof-c2"  data-ring="0" data-col="1" data-rank="2"><span class="hof3d-rank">#02 · 720M</span><div class="hof3d-meta"><h3 class="hof3d-title">Dark Side of the Beat</h3><p class="hof3d-artist">Shadow Phonk</p></div></div>
+          <div class="hof3d-card hof-c3"  data-ring="0" data-col="2" data-rank="3"><span class="hof3d-rank">#03 · 680M</span><div class="hof3d-meta"><h3 class="hof3d-title">Lagos Sunrise</h3><p class="hof3d-artist">Afro Blaze Collective</p></div></div>
+          <div class="hof3d-card hof-c4"  data-ring="0" data-col="3" data-rank="4"><span class="hof3d-rank">#04 · 615M</span><div class="hof3d-meta"><h3 class="hof3d-title">Still Waters</h3><p class="hof3d-artist">Lo Phase</p></div></div>
+          <div class="hof3d-card hof-c5"  data-ring="0" data-col="4" data-rank="5"><span class="hof3d-rank">#05 · 580M</span><div class="hof3d-meta"><h3 class="hof3d-title">Ghost Mode</h3><p class="hof3d-artist">Void Street</p></div></div>
+          <div class="hof3d-card hof-c6"  data-ring="1" data-col="0" data-rank="6"><span class="hof3d-rank">#06 · 542M</span><div class="hof3d-meta"><h3 class="hof3d-title">Neon Drill</h3><p class="hof3d-artist">KLX Riddim</p></div></div>
+          <div class="hof3d-card hof-c7"  data-ring="1" data-col="1" data-rank="7"><span class="hof3d-rank">#07 · 498M</span><div class="hof3d-meta"><h3 class="hof3d-title">Tropic Static</h3><p class="hof3d-artist">Isla Eco</p></div></div>
+          <div class="hof3d-card hof-c8"  data-ring="1" data-col="2" data-rank="8"><span class="hof3d-rank">#08 · 460M</span><div class="hof3d-meta"><h3 class="hof3d-title">Violet Hour</h3><p class="hof3d-artist">Sable Room</p></div></div>
+          <div class="hof3d-card hof-c9"  data-ring="1" data-col="3" data-rank="9"><span class="hof3d-rank">#09 · 432M</span><div class="hof3d-meta"><h3 class="hof3d-title">Green Room</h3><p class="hof3d-artist">Jade Parker</p></div></div>
+          <div class="hof3d-card hof-c10" data-ring="1" data-col="4" data-rank="10"><span class="hof3d-rank">#10 · 410M</span><div class="hof3d-meta"><h3 class="hof3d-title">Lilac Protocol</h3><p class="hof3d-artist">Ember &amp; Ash</p></div></div>
+          <div class="hof3d-card hof-c11" data-ring="2" data-col="0" data-rank="11"><span class="hof3d-rank">#11 · 395M</span><div class="hof3d-meta"><h3 class="hof3d-title">Crimson Tape</h3><p class="hof3d-artist">Ruby Signal</p></div></div>
+          <div class="hof3d-card hof-c12" data-ring="2" data-col="1" data-rank="12"><span class="hof3d-rank">#12 · 372M</span><div class="hof3d-meta"><h3 class="hof3d-title">Ocean Memory</h3><p class="hof3d-artist">Tide Lines</p></div></div>
+          <div class="hof3d-card hof-c13" data-ring="2" data-col="2" data-rank="13"><span class="hof3d-rank">#13 · 350M</span><div class="hof3d-meta"><h3 class="hof3d-title">Field Notes</h3><p class="hof3d-artist">Pine Quarter</p></div></div>
+          <div class="hof3d-card hof-c14" data-ring="2" data-col="3" data-rank="14"><span class="hof3d-rank">#14 · 328M</span><div class="hof3d-meta"><h3 class="hof3d-title">Paper Wings</h3><p class="hof3d-artist">Amber Folk</p></div></div>
+          <div class="hof3d-card hof-c15" data-ring="2" data-col="4" data-rank="15"><span class="hof3d-rank">#15 · 305M</span><div class="hof3d-meta"><h3 class="hof3d-title">Blue Channel</h3><p class="hof3d-artist">Cobalt Choir</p></div></div>
+          <div class="hof3d-card hof-c16" data-ring="3" data-col="0" data-rank="16"><span class="hof3d-rank">#16 · 288M</span><div class="hof3d-meta"><h3 class="hof3d-title">Quiet Motor</h3><p class="hof3d-artist">Slate Machine</p></div></div>
+          <div class="hof3d-card hof-c17" data-ring="3" data-col="1" data-rank="17"><span class="hof3d-rank">#17 · 270M</span><div class="hof3d-meta"><h3 class="hof3d-title">Bone White</h3><p class="hof3d-artist">Chalk Line</p></div></div>
+          <div class="hof3d-card hof-c18" data-ring="3" data-col="2" data-rank="18"><span class="hof3d-rank">#18 · 255M</span><div class="hof3d-meta"><h3 class="hof3d-title">Sunday Traffic</h3><p class="hof3d-artist">Arlo West</p></div></div>
+          <div class="hof3d-card hof-c19" data-ring="3" data-col="3" data-rank="19"><span class="hof3d-rank">#19 · 240M</span><div class="hof3d-meta"><h3 class="hof3d-title">Hotel Hologram</h3><p class="hof3d-artist">Neon Foyer</p></div></div>
+          <div class="hof3d-card hof-c20" data-ring="3" data-col="4" data-rank="20"><span class="hof3d-rank">#20 · 228M</span><div class="hof3d-meta"><h3 class="hof3d-title">Reverse Weather</h3><p class="hof3d-artist">Storm Atlas</p></div></div>
+          <div class="hof3d-card hof-c21" data-ring="4" data-col="0" data-rank="21"><span class="hof3d-rank">#21 · 215M</span><div class="hof3d-meta"><h3 class="hof3d-title">Polar Drift</h3><p class="hof3d-artist">North Star Club</p></div></div>
+          <div class="hof3d-card hof-c22" data-ring="4" data-col="1" data-rank="22"><span class="hof3d-rank">#22 · 208M</span><div class="hof3d-meta"><h3 class="hof3d-title">Second City</h3><p class="hof3d-artist">Hollow Arcade</p></div></div>
+          <div class="hof3d-card hof-c23" data-ring="4" data-col="2" data-rank="23"><span class="hof3d-rank">#23 · 202M</span><div class="hof3d-meta"><h3 class="hof3d-title">Porcelain Highway</h3><p class="hof3d-artist">Marble Fleet</p></div></div>
+          <div class="hof3d-card hof-c24" data-ring="4" data-col="3" data-rank="24"><span class="hof3d-rank">#24 · 199M</span><div class="hof3d-meta"><h3 class="hof3d-title">After Hours Protocol</h3><p class="hof3d-artist">Graveyard Radio</p></div></div>
+          <div class="hof3d-card hof-c25" data-ring="4" data-col="4" data-rank="25"><span class="hof3d-rank">#25 · 196M</span><div class="hof3d-meta"><h3 class="hof3d-title">Ultraviolet Dream</h3><p class="hof3d-artist">Spectrum Audio</p></div></div>
+        </div>
+        <div class="hof-stars" aria-hidden="true"></div>
+        <div class="hof-vignette-soft" aria-hidden="true"></div>
+        <div class="hof-hint"><span>Click &amp; drag to look around</span></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ══ FOOTER ════════════════════════════════════════== -->
+  <footer class="master-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a href="index.html" class="footer-logo">afterbeatsmusic</a>
+          <p class="footer-tagline">Late nights. Deep feels. Your sound.<br>The Internet, Worldwide.</p>
+          <a href="mailto:contact@afterbeatsmusic.com" class="footer-email">contact@afterbeatsmusic.com</a>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Popular Channels</h4>
+            <a href="#">afterbeatsmusic</a><a href="#">Rock</a>
+            <a href="#">Latin</a><a href="#">Chill</a>
+            <a href="#">Country</a><a href="#">Dance</a>
+          </div>
+          <div class="footer-col">
+            <h4>Explore</h4>
+            <a href="index.html">Home</a>
+            <a href="hall-of-fame.html">Hall of Fame</a>
+            <a href="articles.html">Articles</a>
+            <a href="contact.html">Contact</a>
+          </div>
+          <div class="footer-col">
+            <h4>Legal</h4>
+            <a href="#">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <div class="footer-socials">
+          <a href="#" class="footer-social-link" aria-label="YouTube"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.8 8s-.2-1.4-.8-2c-.8-.8-1.6-.9-2-.9C16.6 5 12 5 12 5s-4.6 0-7 .1c-.4.1-1.2.1-2 .9-.6.6-.8 2-.8 2S2 9.6 2 11.2v1.5c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.8.8 1.8.8 2.3.9C6.8 19 12 19 12 19s4.6 0 7-.1c.4-.1 1.2-.1 2-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.5C22 9.6 21.8 8 21.8 8zM9.7 14.5v-5.5l5.5 2.8-5.5 2.7z"/></svg></a>
+          <a href="#" class="footer-social-link" aria-label="Instagram"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg></a>
+          <a href="#" class="footer-social-link" aria-label="X"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+          <a href="#" class="footer-social-link" aria-label="SoundCloud"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.56 8.87V17h8.76c1.25 0 2.32-.97 2.38-2.21.06-1.3-.93-2.39-2.21-2.42-.04 0-.08 0-.12.01-.19-2.32-2.13-4.15-4.51-4.15-1.1 0-2.11.39-2.88 1.03-.32-.19-.67-.29-1.05-.29-.03 0-.06 0-.09 0-.75.04-1.34.64-1.34 1.39 0 .38.15.72.39.97m-9.87 5.18c0 1.62 1.32 2.93 2.95 2.93.07 0 .14 0 .21-.01H8.5V7.83c-.28-.13-.58-.19-.9-.19-1.62 0-2.94 1.32-2.94 2.94 0 .24.03.47.09.69C3.01 11.54 1.69 12.69 1.69 14.05z"/></svg></a>
+          <a href="#" class="footer-social-link" aria-label="Spotify"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg></a>
+        </div>
+        <span class="footer-copyright">&copy; <span class="copyright-year">2025</span> afterbeatsmusic. All rights reserved.</span>
+      </div>
+    </div>
+  </footer>
+
+  <div class="audio-control" id="audioControl">
+    <button class="audio-btn" id="audioBtn" aria-label="Enable audio">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
+      Enable Audio
+    </button>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@barba/core@2.9.7/dist/barba.umd.min.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

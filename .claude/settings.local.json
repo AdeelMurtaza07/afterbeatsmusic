@@ -1,7 +1,13 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:7clouds.org)"
+      "WebFetch(domain:7clouds.org)",
+      "Bash(curl -s https://7clouds.org/)",
+      "Bash(curl -s https://7clouds.org/hall-of-fame)",
+      "Bash(curl -s https://7clouds.org/articles)",
+      "Bash(curl -s https://7clouds.org/contact)",
+      "WebFetch(domain:cdn.prod.website-files.com)",
+      "Read(//tmp/**)"
     ]
   }
 }
