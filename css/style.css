@@ -1946,17 +1946,21 @@ ul, ol { list-style: none; }
 }
 .hof3d-card {
   position: absolute;
-  width: 280px;
-  height: 160px;
-  left: -140px;
-  top: -80px;
+  width: 240px;
+  height: 140px;
+  left: -120px;
+  top: -70px;
   border-radius: 14px;
   overflow: hidden;
   transform-style: preserve-3d;
   transform:
     rotateY(var(--ry, 0deg))
     rotateX(var(--rx, 0deg))
-    translateZ(-680px);
+    translateZ(-520px);
+  background-color: #0a0a0a;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   box-shadow:
     0 18px 50px rgba(0,0,0,0.75),
     0 0 0 1px rgba(255,255,255,0.08) inset;
@@ -2048,8 +2052,94 @@ ul, ol { list-style: none; }
   50%      { opacity: 0.95; }
 }
 @media (max-width: 767px) {
-  .hof3d-card { width: 220px; height: 130px; left: -110px; top: -65px; padding: 14px; }
+  .hof3d-card { width: 200px; height: 120px; left: -100px; top: -60px; padding: 14px; }
   .hof3d-title { font-size: 15px; }
+}
+
+/* ---------- Hall of Fame — Video Modal ---------- */
+.hof-video-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.25s var(--ease-out);
+}
+.hof-video-modal.open {
+  display: flex;
+  opacity: 1;
+}
+.hof-video-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.86);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  cursor: pointer;
+}
+.hof-video-inner {
+  position: relative;
+  width: min(92vw, 1000px);
+  aspect-ratio: 16 / 9;
+  z-index: 1;
+  border-radius: 14px;
+  overflow: hidden;
+  background: #000;
+  box-shadow:
+    0 30px 90px rgba(0, 0, 0, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  transform: scale(0.96);
+  transition: transform 0.3s var(--ease-out);
+}
+.hof-video-modal.open .hof-video-inner { transform: scale(1); }
+.hof-video-inner iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.hof-video-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  color: #fff;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.2s var(--ease-out), transform 0.2s var(--ease-out);
+}
+.hof-video-close:hover {
+  background: rgba(0, 0, 0, 0.85);
+  transform: scale(1.08);
+}
+.hof-video-fallback {
+  position: absolute;
+  left: 50%;
+  bottom: -34px;
+  transform: translateX(-50%);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s var(--ease-out);
+}
+.hof-video-fallback:hover { color: rgba(255, 255, 255, 0.9); }
+@media (max-width: 767px) {
+  .hof-video-close { top: 8px; right: 8px; width: 32px; height: 32px; }
+  .hof-video-fallback { font-size: 10px; bottom: -28px; }
 }
 
 /* ---------- Contact hero — centered content + richer bg ---------- */

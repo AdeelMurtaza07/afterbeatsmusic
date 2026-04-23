@@ -514,23 +514,23 @@ function initHofSphere() {
 
   const cards = qsa('.hof3d-card', camera);
 
-  // Distribute cards across the sphere: 5 rings × 5 columns.
-  // Each ring gets a 36° theta offset so rings don't perfectly stack.
+  // Distribute cards across the sphere: 5 rings × 6 columns = 30 slots.
+  // Each ring gets a 12° theta offset so rings don't stack perfectly.
+  // 60° theta step gives a full 360° wrap (6 × 60 = 360).
   cards.forEach((card) => {
     const ring = parseInt(card.dataset.ring, 10) || 0;
     const col  = parseInt(card.dataset.col,  10) || 0;
-    const phi   = -50 + ring * 25;            // -50, -25, 0, 25, 50
-    const theta = col * 72 + ring * 18 - 144; // spread 360°, offset per ring
+    const phi   = -50 + ring * 25;              // -50, -25, 0, 25, 50
+    const theta = (col - 2.5) * 60 + ring * 12; // full wrap, offset per ring
     card.style.setProperty('--ry', theta + 'deg');
     card.style.setProperty('--rx', phi + 'deg');
 
-    // Entrance stagger — fade from slightly farther back
     if (typeof gsap !== 'undefined') {
       gsap.from(card, {
         opacity: 0,
         scale: 0.6,
         duration: 0.8,
-        delay: 0.1 + (ring * 5 + col) * 0.035,
+        delay: 0.1 + (ring * 6 + col) * 0.028,
         ease: 'power2.out',
       });
     }
@@ -540,6 +540,7 @@ function initHofSphere() {
   let yaw = 0, pitch = 0;
   let dragging = false, lx = 0, ly = 0;
   let idle = 0;
+  let downX = 0, downY = 0, dragDist = 0;
 
   const apply = () => {
     camera.style.transform = `rotateX(${pitch}deg) rotateY(${yaw}deg)`;
@@ -559,6 +560,8 @@ function initHofSphere() {
     viewer.classList.add('dragging');
     const p = getXY(e);
     lx = p.x; ly = p.y;
+    downX = p.x; downY = p.y;
+    dragDist = 0;
   };
   const onMove = (e) => {
     if (!dragging) return;
@@ -568,6 +571,8 @@ function initHofSphere() {
     if (pitch >  55) pitch =  55;
     if (pitch < -55) pitch = -55;
     lx = p.x; ly = p.y;
+    const d = Math.hypot(p.x - downX, p.y - downY);
+    if (d > dragDist) dragDist = d;
     apply();
   };
   const onUp = () => {
@@ -583,7 +588,7 @@ function initHofSphere() {
   window.addEventListener('touchend',   onUp);
   window.addEventListener('touchcancel',onUp);
 
-  // Idle auto-rotation — resumes 2s after the last drag
+  // Idle auto-rotation — resumes 1.5s after the last drag
   let last = performance.now();
   const tick = (now) => {
     const dt = Math.min(0.05, (now - last) / 1000);
@@ -598,6 +603,44 @@ function initHofSphere() {
     requestAnimationFrame(tick);
   };
   requestAnimationFrame(tick);
+
+  // ── Card click → open video modal (skip if user was dragging) ──
+  const modal     = qs('#hofVideoModal');
+  const iframe    = qs('#hofVideoIframe');
+  const closeBtn  = qs('#hofVideoClose');
+  const backdrop  = qs('#hofVideoBackdrop');
+  const fallback  = qs('#hofVideoFallback');
+
+  const openModal = (ytId) => {
+    if (!modal || !iframe || !ytId) return;
+    // Use canonical youtube.com/embed — nocookie variant is more restrictive
+    // for label-controlled music videos. Plain /embed has the widest support.
+    iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&playsinline=1`;
+    if (fallback) fallback.href = `https://www.youtube.com/watch?v=${ytId}`;
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  };
+  const closeModal = () => {
+    if (!modal || !iframe) return;
+    modal.classList.remove('open');
+    modal.setAttribute('aria-hidden', 'true');
+    iframe.src = '';
+    document.body.style.overflow = '';
+  };
+
+  cards.forEach((card) => {
+    card.addEventListener('click', () => {
+      if (dragDist > 6) return; // user was dragging, not clicking
+      openModal(card.dataset.youtube);
+    });
+  });
+
+  closeBtn?.addEventListener('click', closeModal);
+  backdrop?.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('open')) closeModal();
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════
