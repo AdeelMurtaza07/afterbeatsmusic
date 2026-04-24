@@ -18,15 +18,25 @@
   <!-- Barba overlay for page transitions -->
   <div class="barba-overlay" id="barbaOverlay"></div>
 
-  <!-- ══ NAVIGATION ══════════════════════════════════════ -->
+  <!-- ══ NAVIGATION (Liquid-glass floating pill) ═══════════ -->
   <nav class="master-nav" id="masterNav" role="navigation">
-    <div class="nav-container">
-      <a href="index.html" class="nav-brand">afterbeatsmusic</a>
+    <div class="nav-pill">
+      <a href="index.html" class="nav-brand">
+        <span class="nav-brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M10 8l6 4-6 4z" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span class="nav-brand-text">afterbeatsmusic</span>
+      </a>
 
-      <div class="nav-links">
+      <div class="nav-center">
+        <a href="hall-of-fame.html" class="nav-link" data-barba-update>Hall of Fame</a>
+
         <!-- Channels Dropdown -->
         <div class="nav-dd-wrap">
-          <button class="nav-dd-btn" aria-expanded="false" aria-haspopup="true">
+          <button class="nav-dd-btn nav-link" aria-expanded="false" aria-haspopup="true">
             Channels
             <svg class="nav-chevron" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
@@ -75,8 +85,12 @@
           </div>
         </div>
 
+        <a href="#" class="nav-link">Merch</a>
+        <a href="articles.html" class="nav-link" data-barba-update>Articles</a>
+      </div>
+
+      <div class="nav-right">
         <a href="contact.html" class="nav-link" data-barba-update>Contact</a>
-        <a href="hall-of-fame.html" class="nav-link" data-barba-update>Hall of Fame</a>
         <a href="#submit" class="nav-link nav-link-cta">Submit Demo</a>
       </div>
 
@@ -92,8 +106,10 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <div class="mobile-nav-links">
-      <a href="contact.html" class="mobile-nav-link">Contact</a>
       <a href="hall-of-fame.html" class="mobile-nav-link">Hall of Fame</a>
+      <a href="#" class="mobile-nav-link">Merch</a>
+      <a href="articles.html" class="mobile-nav-link">Articles</a>
+      <a href="contact.html" class="mobile-nav-link">Contact</a>
       <a href="#submit" class="mobile-nav-cta">Submit Demo</a>
     </div>
     <div class="mobile-channels-label">Channels</div>
@@ -112,121 +128,97 @@
   <!-- ══ MAIN CONTENT ════════════════════════════════════ -->
   <main data-barba="container" data-barba-namespace="home">
 
-    <!-- ── Kaitonote Spotlight (Desktop 3D Hero) ── -->
-    <section class="kaitonote-spotlight" id="spotlight" aria-label="Featured releases">
-      <!-- 3D perspective container -->
-      <div class="spotlight-perspective" id="spotlightPerspective">
-        <div class="spotlight-img si-1"><div class="img-inner"><div class="img-bg"></div><span class="img-label">Hip-Hop</span></div></div>
-        <div class="spotlight-img si-2"><div class="img-inner"><div class="img-bg"></div><span class="img-label">Trap</span></div></div>
-        <div class="spotlight-img si-3"><div class="img-inner"><div class="img-bg"></div><span class="img-label">Afrobeats</span></div></div>
-        <div class="spotlight-img si-4"><div class="img-inner"><div class="img-bg"></div><span class="img-label">R&amp;B</span></div></div>
-        <div class="spotlight-img si-5"><div class="img-inner"><div class="img-bg"></div><span class="img-label">Phonk</span></div></div>
-        <div class="spotlight-img si-6"><div class="img-inner"><div class="img-bg"></div><span class="img-label">Drill</span></div></div>
-        <div class="spotlight-img si-7"><div class="img-inner"><div class="img-bg"></div><span class="img-label">Lo-fi</span></div></div>
-        <div class="spotlight-img si-8"><div class="img-inner"><div class="img-bg"></div><span class="img-label">Neo Soul</span></div></div>
+    <!-- ── Hero (Video Background + Liquid-Glass Pill) ── -->
+    <section class="hero-video" id="hero" aria-label="Hero">
+
+      <!-- Video background -->
+      <div class="hero-video-bg" id="heroVideoBg">
+        <video id="heroVideo" autoplay muted loop playsinline preload="auto" poster="">
+          <source src="images/9757086-uhd_3840_2160_24fps.mp4" type="video/mp4">
+        </video>
+        <div class="hero-video-overlay" aria-hidden="true"></div>
+        <div class="hero-video-grain" aria-hidden="true"></div>
       </div>
 
-      <!-- Overlay text -->
-      <div class="spotlight-content">
-        <div class="spotlight-intro" id="spotlightIntro">
-          <h1>
-            <span class="line">Late nights.</span><br>
-            <span class="line">Deep feels.</span><br>
-            <span class="line">Your sound.</span>
-          </h1>
-          <a href="#" class="spotlight-listen-btn">
-            <svg viewBox="0 0 24 24" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
-            Listen Now
-          </a>
+      <!-- Centered content -->
+      <div class="hero-content" id="heroContent">
+        <div class="hero-logo" data-hero-reveal>
+          <span class="hero-logo-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M10 8l6 4-6 4z" fill="currentColor" stroke="none"/>
+            </svg>
+          </span>
+          <span class="hero-logo-text">afterbeatsmusic</span>
         </div>
-        <div class="spotlight-outro" id="spotlightOutro">
-          <h2>13 years of curating music for<br>over 31 million quality music fans.</h2>
-        </div>
-      </div>
-    </section>
 
-    <!-- Mobile Hero Fallback -->
-    <section class="spotlight-mobile" aria-label="Hero">
-      <h1>Late nights.<br>Deep feels.<br>Your sound.</h1>
-      <a href="#" class="spotlight-listen-btn">
-        <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><polygon points="5,3 19,12 5,21"/></svg>
-        Listen Now
-      </a>
-    </section>
+        <h1 class="hero-headline" data-hero-reveal data-delay="1">
+          A record label built on<br>passion for great music
+        </h1>
 
-    <!-- ── Brand Intro ── -->
-    <section class="brand-intro section" data-animate-fade-in>
-      <div class="container brand-intro-wrap">
-        <span class="section-eyebrow">Curated · Never algorithmic</span>
-        <h2 class="brand-intro-title">afterbeatsmusic</h2>
-        <p class="brand-intro-lede">
-          A decade of hand-picked sound. We don't rely on algorithms, trending
-          charts, or paid placement. Every release we feature is chosen by a
-          human who fell in love with it first — the way music was always
-          supposed to reach your ears.
+        <p class="hero-sublede" data-hero-reveal data-delay="2">
+          For the past 13 years, afterbeatsmusic has been curating the best songs from all
+          over the world for a community of over 31 million quality music fans.
         </p>
+
+        <div class="hero-ctas" data-hero-reveal data-delay="3">
+          <a href="#submit" class="hero-cta primary">
+            <span>Submit Your Demo</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
+          </a>
+          <a href="hall-of-fame.html" class="hero-cta ghost" data-barba-update>Hall of Fame</a>
+        </div>
+      </div>
+
+      <!-- Partner strip — inside hero, bottom -->
+      <div class="hero-partners" data-hero-reveal data-delay="4">
+        <p class="hero-partners-label">afterbeatsmusic is the go-to partner for major labels and industry leaders</p>
+        <div class="hero-partners-scroller">
+          <div class="hero-partners-track" aria-hidden="true">
+            <span class="hp-logo">Warner Records</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Def Jam</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Epic Records</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Universal Music Group</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Sony Music</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Interscope</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Atlantic Records</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Columbia</span>
+            <span class="hp-dot">·</span>
+            <!-- duplicate for seamless loop -->
+            <span class="hp-logo">Warner Records</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Def Jam</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Epic Records</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Universal Music Group</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Sony Music</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Interscope</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Atlantic Records</span>
+            <span class="hp-dot">·</span>
+            <span class="hp-logo">Columbia</span>
+            <span class="hp-dot">·</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scroll cue -->
+      <div class="hero-scroll-cue" aria-hidden="true">
+        <span class="hero-scroll-dot"></span>
       </div>
     </section>
-
-    <!-- ── Stats Strip ── -->
-    <div class="stats-strip" data-animate-fade-in>
-      <div class="stats-strip-inner">
-        <div class="stat-item">
-          <span class="stat-num">47 Billion+</span>
-          <span class="stat-label">Fans &amp; Listeners</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">7,000+</span>
-          <span class="stat-label">Curated Releases</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">24/7</span>
-          <span class="stat-label">Talent Search</span>
-        </div>
-        <div class="stat-item">
-          <span class="stat-num">45 Million</span>
-          <span class="stat-label">YouTube Subscribers</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── Trusted By ── -->
-    <div class="trusted-by" data-animate-fade-in>
-      <p class="trusted-by-label">Trusted &amp; partnered with</p>
-      <div class="trusted-scroller">
-        <div class="trusted-track" aria-hidden="true">
-          <span class="trusted-item">Universal Music Group</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Sony Music Entertainment</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Warner Records</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Def Jam</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Epic Records</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Atlantic Records</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Interscope</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <!-- duplicate for seamless loop -->
-          <span class="trusted-item">Universal Music Group</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Sony Music Entertainment</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Warner Records</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Def Jam</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Epic Records</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Atlantic Records</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-          <span class="trusted-item">Interscope</span>
-          <span class="trusted-item" style="color:var(--border-med)">·</span>
-        </div>
-      </div>
-    </div>
 
     <!-- ── Channels ── -->
     <section class="channels-section section" id="channels">
@@ -553,9 +545,9 @@
 
   <!-- ── Audio Control (fixed) ── -->
   <div class="audio-control" id="audioControl">
-    <button class="audio-btn" id="audioBtn" aria-label="Enable audio">
+    <button class="audio-btn" id="audioBtn" aria-label="Enable sound">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>
-      Enable Audio
+      <span class="audio-btn-label">Enable Sound</span>
     </button>
   </div>
 

@@ -353,10 +353,11 @@ function initTrustedScroller() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   10. AUDIO CONTROL BUTTON  (fixed bottom-right)
+   10. AUDIO CONTROL BUTTON  (toggles hero video mute)
    ═══════════════════════════════════════════════════════════ */
 function initAudioControl() {
-  const btn = qs('#audioBtn');
+  const btn   = qs('#audioBtn');
+  const video = qs('#heroVideo');
   if (!btn) return;
 
   let enabled = false;
@@ -366,15 +367,101 @@ function initAudioControl() {
 
   btn.addEventListener('click', () => {
     enabled = !enabled;
+    if (video) {
+      video.muted = !enabled;
+      if (enabled) {
+        // Some browsers pause when toggling muted; ensure playback resumes
+        const p = video.play();
+        if (p && typeof p.catch === 'function') p.catch(() => {});
+      }
+    }
     btn.innerHTML = enabled
-      ? `${iconOff} Disable Audio`
-      : `${iconOn} Enable Audio`;
+      ? `${iconOff}<span class="audio-btn-label">Disable Sound</span>`
+      : `${iconOn}<span class="audio-btn-label">Enable Sound</span>`;
+    btn.setAttribute('aria-label', enabled ? 'Disable sound' : 'Enable sound');
   });
 
   // Slide-in entrance
   const ctrl = qs('#audioControl');
   if (ctrl && typeof gsap !== 'undefined') {
     gsap.from(ctrl, { opacity: 0, y: 20, duration: 0.7, delay: 1.5, ease: 'power2.out' });
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   10b. HERO VIDEO — load handling, on-enter reveal, scroll parallax
+   ═══════════════════════════════════════════════════════════ */
+function initHeroVideo() {
+  const hero  = qs('.hero-video');
+  if (!hero) return;
+
+  const bg      = qs('.hero-video-bg', hero);
+  const video   = qs('#heroVideo', hero);
+  const content = qs('.hero-content', hero);
+  const reveals = qsa('[data-hero-reveal]', hero);
+
+  // Force autoplay on iOS / strict browsers
+  if (video) {
+    video.muted = true;
+    video.setAttribute('muted', '');
+    const tryPlay = () => {
+      const p = video.play();
+      if (p && typeof p.catch === 'function') p.catch(() => {});
+    };
+    tryPlay();
+    video.addEventListener('canplay', tryPlay, { once: true });
+  }
+
+  // Staggered reveal of hero content
+  if (typeof gsap !== 'undefined' && reveals.length) {
+    reveals.forEach(el => {
+      const delay = parseFloat(el.dataset.delay || 0) * 0.12;
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 1.0,
+        delay: 0.3 + delay,
+        ease: 'power3.out',
+      });
+    });
+  } else {
+    // Fallback — reveal immediately via CSS transition
+    reveals.forEach(el => {
+      el.style.transition = 'opacity 0.9s ease, transform 0.9s ease';
+      requestAnimationFrame(() => {
+        el.style.opacity   = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    });
+  }
+
+  // Scroll parallax — subtle upward drift + fade for content
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    if (bg) {
+      gsap.to(bg, {
+        yPercent: 15,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: hero,
+          start: 'top top',
+          end: 'bottom top',
+          scrub: true,
+        },
+      });
+    }
+    if (content) {
+      gsap.to(content, {
+        y: -40,
+        opacity: 0,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: hero,
+          start: 'top top',
+          end: '70% top',
+          scrub: true,
+        },
+      });
+    }
   }
 }
 
@@ -723,7 +810,7 @@ function initBarba() {
     }],
     views: [{
       namespace: 'home',
-      afterEnter() { initSpotlight(); },
+      afterEnter() { initHeroVideo(); },
     }],
   });
 }
@@ -753,9 +840,13 @@ function initPageScripts() {
   initNavEntrance();
   initContactParallax();
 
-  // Spotlight only exists on the home page
+  // Home-page hero (video + parallax) only runs when the hero exists
   const ns = qs('[data-barba-namespace]')?.dataset?.barbaNamespace;
-  if (ns === 'home' || qs('.kaitonote-spotlight')) {
+  if (ns === 'home' || qs('.hero-video')) {
+    initHeroVideo();
+  }
+  // Legacy spotlight — safe no-op if the markup has been replaced
+  if (qs('.kaitonote-spotlight')) {
     initSpotlight();
   }
 

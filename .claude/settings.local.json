@@ -7,7 +7,8 @@
       "Bash(curl -s https://7clouds.org/articles)",
       "Bash(curl -s https://7clouds.org/contact)",
       "WebFetch(domain:cdn.prod.website-files.com)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "Bash(start \"\" \"d:/PO/afterbeatsmusic/index.html\")"
     ]
   }
 }

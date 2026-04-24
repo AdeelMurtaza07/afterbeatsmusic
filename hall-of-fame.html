@@ -19,16 +19,28 @@
   <div class="barba-overlay" id="barbaOverlay"></div>
 
   <!-- ══ NAVIGATION ══════════════════════════════════════ -->
+  <!-- ══ NAVIGATION (Liquid-glass flush-top, rounded-bottom) ═══ -->
   <nav class="master-nav scrolled" id="masterNav" role="navigation">
-    <div class="nav-container">
-      <a href="index.html" class="nav-brand">afterbeatsmusic</a>
-      <div class="nav-links">
+    <div class="nav-pill">
+      <a href="index.html" class="nav-brand">
+        <span class="nav-brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="9"/>
+            <path d="M10 8l6 4-6 4z" fill="currentColor" stroke="none"/>
+          </svg>
+        </span>
+        <span class="nav-brand-text">afterbeatsmusic</span>
+      </a>
+
+      <div class="nav-center">
+        <a href="hall-of-fame.html" class="nav-link" aria-current="page">Hall of Fame</a>
+
         <div class="nav-dd-wrap">
-          <button class="nav-dd-btn" aria-expanded="false">
+          <button class="nav-dd-btn nav-link" aria-expanded="false" aria-haspopup="true">
             Channels
             <svg class="nav-chevron" viewBox="0 0 12 12" fill="none"><path d="M2 4L6 8L10 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <div class="nav-dd-menu">
+          <div class="nav-dd-menu" role="menu">
             <div>
               <span class="nav-dd-col-label">National</span>
               <a href="#" class="nav-dd-item">afterbeatsmusic</a>
@@ -56,10 +68,16 @@
             </div>
           </div>
         </div>
-        <a href="contact.html" class="nav-link">Contact</a>
-        <a href="hall-of-fame.html" class="nav-link" aria-current="page">Hall of Fame</a>
+
+        <a href="#" class="nav-link">Merch</a>
+        <a href="articles.html" class="nav-link" data-barba-update>Articles</a>
+      </div>
+
+      <div class="nav-right">
+        <a href="contact.html" class="nav-link" data-barba-update>Contact</a>
         <a href="index.html#submit" class="nav-link nav-link-cta">Submit Demo</a>
       </div>
+
       <button class="nav-mobile-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false">
         <span class="ham-line"></span><span class="ham-line"></span><span class="ham-line"></span>
       </button>
@@ -69,8 +87,10 @@
   <!-- Mobile Menu -->
   <div class="mobile-menu" id="mobileMenu" aria-hidden="true">
     <div class="mobile-nav-links">
-      <a href="contact.html" class="mobile-nav-link">Contact</a>
       <a href="hall-of-fame.html" class="mobile-nav-link">Hall of Fame</a>
+      <a href="#" class="mobile-nav-link">Merch</a>
+      <a href="articles.html" class="mobile-nav-link">Articles</a>
+      <a href="contact.html" class="mobile-nav-link">Contact</a>
       <a href="index.html#submit" class="mobile-nav-cta">Submit Demo</a>
     </div>
     <div class="mobile-channels-label">Channels</div>
