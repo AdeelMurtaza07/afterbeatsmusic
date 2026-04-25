@@ -683,6 +683,506 @@ ul, ol { list-style: none; }
   transform: translateY(24px);
 }
 
+/* ---------- Manifesto (bleeds from hero) ---------- */
+.manifesto {
+  position: relative;
+  background: var(--black);
+  padding: 160px 24px 120px;
+  overflow: hidden;
+  isolation: isolate;
+}
+/* Top "bleed" — a faint radial warm glow that echoes the hero video's highlight, */
+/* plus a subtle upper gradient so the section doesn't start with a hard edge.    */
+.manifesto-bleed {
+  position: absolute;
+  left: 50%;
+  top: -40%;
+  transform: translateX(-50%);
+  width: 120vw;
+  height: 80vh;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 50%,
+      rgba(255, 255, 255, 0.025) 0%,
+      rgba(255, 255, 255, 0.01) 40%,
+      transparent 70%);
+}
+
+.manifesto-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 980px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+/* Giant opening quote */
+.manifesto-quote {
+  display: inline-block;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(140px, 18vw, 280px);
+  font-weight: 700;
+  line-height: 0.55;
+  color: var(--white);
+  user-select: none;
+  margin-bottom: 72px;
+  transform-origin: center bottom;
+  /* Subtle breathing loop once revealed */
+  animation: quoteBreathe 6s var(--ease-std) infinite;
+}
+@keyframes quoteBreathe {
+  0%, 100% { transform: scale(1);    opacity: 1;    }
+  50%      { transform: scale(1.03); opacity: 0.94; }
+}
+
+/* Manifesto text — big, bold, centered */
+.manifesto-text {
+  font-size: clamp(1.6rem, 2.6vw, 2.4rem);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.32;
+  color: var(--white);
+  max-width: 920px;
+  margin: 0 auto 64px;
+  text-wrap: balance;
+}
+/* Per-word spans inserted by JS for the scroll-scrubbed reveal */
+.mf-word {
+  display: inline-block;
+  will-change: transform, opacity;
+}
+
+/* Hall of Fame CTA — text + arrow, animated underline */
+.manifesto-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--white);
+  padding: 12px 6px;
+  position: relative;
+  transition: color 0.2s;
+}
+.manifesto-cta::after {
+  content: '';
+  position: absolute;
+  left: 6px;
+  right: 40px;          /* underline ends before the arrow */
+  bottom: 6px;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0.3);
+  transform-origin: left center;
+  transition: transform 0.45s var(--ease-out);
+}
+.manifesto-cta:hover::after { transform: scaleX(1); }
+.manifesto-cta svg {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s var(--ease-out);
+}
+.manifesto-cta:hover svg { transform: translateX(6px); }
+
+/* Team strip — overlapping circular avatars + "+33" chip */
+.manifesto-team {
+  position: relative;
+  z-index: 2;
+  margin-top: 96px;
+  display: flex;
+  justify-content: center;
+}
+.mt-strip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px;
+}
+.mt-avatar {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0;
+  border: 2px solid var(--black);
+  margin-left: -12px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+  transition: transform 0.35s var(--ease-out),
+              box-shadow 0.35s var(--ease-out);
+  cursor: default;
+  will-change: transform;
+}
+.mt-avatar:first-child { margin-left: 0; }
+.mt-avatar:hover {
+  transform: translateY(-6px) scale(1.05);
+  z-index: 10;
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.5);
+}
+.mt-more {
+  background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+  color: var(--white-dim);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  font-weight: 600;
+  border-color: var(--black);
+}
+
+/* Reveal initial states (JS overrides these) */
+[data-manifesto-reveal] {
+  opacity: 0;
+  transform: translateY(22px);
+}
+
+@media (max-width: 767px) {
+  .manifesto { padding: 100px 20px 80px; }
+  .manifesto-quote { margin-bottom: 48px; }
+  .manifesto-text { margin-bottom: 44px; }
+  .manifesto-team { margin-top: 64px; }
+  .mt-avatar { width: 44px; height: 44px; font-size: 11px; margin-left: -10px; }
+}
+
+/* ---------- Showcase Strip (auto-scrolling mixed media) ---------- */
+.showcase-strip {
+  position: relative;
+  background: var(--black);
+  padding: 60px 0 140px;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Bleed from the manifesto team strip — fades the top into the section */
+.showcase-top-fade {
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 140px;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    var(--black) 0%,
+    rgba(0,0,0,0.85) 30%,
+    rgba(0,0,0,0.4) 65%,
+    transparent 100%
+  );
+}
+
+.showcase-viewport {
+  width: 100%;
+  overflow: hidden;
+  /* soft side fade so cards enter/exit without popping */
+  mask-image: linear-gradient(90deg,
+    transparent 0%,
+    rgba(0,0,0,0.4) 2%,
+    black 6%,
+    black 94%,
+    rgba(0,0,0,0.4) 98%,
+    transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg,
+    transparent 0%,
+    rgba(0,0,0,0.4) 2%,
+    black 6%,
+    black 94%,
+    rgba(0,0,0,0.4) 98%,
+    transparent 100%);
+}
+
+.showcase-track {
+  display: flex;
+  width: max-content;
+  gap: 22px;
+  padding: 20px 0;       /* room for hover lift + shadow */
+  animation: scShift 75s linear infinite;
+  will-change: transform;
+}
+.showcase-track:hover { animation-play-state: paused; }
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .showcase-track { animation: none; }
+}
+@keyframes scShift {
+  from { transform: translate3d(0, 0, 0); }
+  to   { transform: translate3d(-50%, 0, 0); }
+}
+
+.sc-item {
+  flex-shrink: 0;
+  width: clamp(280px, 32vw, 500px);
+  aspect-ratio: 16 / 10;
+  border-radius: 16px;
+  overflow: hidden;
+  position: relative;
+  background: #0a0a0a;
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.04) inset;
+  transition: transform 0.45s var(--ease-out),
+              box-shadow 0.45s var(--ease-out);
+  cursor: pointer;
+  /* Promote to its own compositor layer so the marquee transform doesn't
+     repaint the underlying video frames every tick */
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+.sc-item:hover {
+  transform: translate3d(0, -8px, 0);
+  box-shadow:
+    0 30px 70px rgba(0, 0, 0, 0.65),
+    0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  z-index: 5;
+}
+.sc-item img,
+.sc-item video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+/* Hint the compositor that videos will animate via the parent track */
+.sc-item video {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+/* Subtle vignette on video cards so they sit with the image cards */
+.sc-item.sc-video::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.4) 100%),
+    radial-gradient(ellipse at center, transparent 55%, rgba(0,0,0,0.25) 100%);
+}
+
+/* Optional tiny "LIVE" dot on video cards to signal they're moving */
+.sc-item.sc-video::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ff3b3b;
+  box-shadow: 0 0 0 4px rgba(255, 59, 59, 0.25);
+  z-index: 2;
+  animation: scLiveBlink 1.6s ease-in-out infinite;
+}
+@keyframes scLiveBlink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+
+@media (max-width: 767px) {
+  .showcase-strip { padding: 40px 0 90px; }
+  .showcase-top-fade { height: 90px; }
+  .showcase-track { gap: 14px; animation-duration: 55s; }
+  .sc-item { width: 72vw; border-radius: 12px; }
+}
+
+/* ---------- Story (Sticky-pinned scrollytelling) ----------
+   Uses CSS position:sticky for the pin instead of ScrollTrigger's pin
+   feature. Native sticky is layout-engine-driven so it can't drift due
+   to font swaps or image-decode layout shifts the way ScrollTrigger's
+   pinSpacer can. ScrollTrigger only scrubs the timeline against scroll
+   progress — it doesn't manage positioning at all.
+
+   • .story         total scroll length = 500vh (100vh visible + 400vh scrub)
+   • .story-stage   sticks to viewport top for the entire 400vh of scrub
+*/
+.story {
+  position: relative;
+  height: 500vh;
+  background: var(--black);
+}
+.story-stage {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* Phase 1 headline — centered, large, kept above the flurry but below the video */
+/* NOTE: centering is owned by GSAP (xPercent/yPercent) so its transform tweens
+   don't fight the CSS translate(-50%, -50%). Top/left set the anchor point. */
+.story-h1 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 5;
+  text-align: center;
+  font-size: clamp(2rem, 5.5vw, 4.8rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  color: var(--white);
+  text-shadow: 0 2px 30px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+/* Image flurry container — perspective parent for true 3D depth */
+.story-flurry {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+}
+.sf-img {
+  position: absolute;
+  border-radius: 14px;
+  object-fit: cover;
+  opacity: 0;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  /* z is animated by GSAP — no transform here so we don't fight it */
+}
+
+/* 15 scattered positions + sizes + tilts — designed around the centered headline */
+.sf-1  { top:  6%; left:  3%; width: 18vw; max-width: 260px; aspect-ratio: 16/10; transform: rotate(-4deg); }
+.sf-2  { top: 10%; right: 5%; width: 22vw; max-width: 320px; aspect-ratio: 16/10; transform: rotate(3deg); }
+.sf-3  { top:  4%; left: 38%; width: 16vw; max-width: 230px; aspect-ratio: 16/10; transform: rotate(-2deg); }
+.sf-4  { top: 28%; left:  1%; width: 14vw; max-width: 200px; aspect-ratio: 16/10; transform: rotate(5deg); }
+.sf-5  { top: 24%; right: 1%; width: 20vw; max-width: 280px; aspect-ratio: 16/10; transform: rotate(-3deg); }
+.sf-6  { top: 18%; left: 22%; width: 13vw; max-width: 180px; aspect-ratio: 16/10; transform: rotate(6deg); }
+.sf-7  { top: 22%; right:24%; width: 14vw; max-width: 200px; aspect-ratio: 16/10; transform: rotate(-5deg); }
+.sf-8  { top: 65%; left: 18%; width: 16vw; max-width: 230px; aspect-ratio: 16/10; transform: rotate(-3deg); }
+.sf-9  { top: 60%; right:18%; width: 18vw; max-width: 260px; aspect-ratio: 16/10; transform: rotate(4deg); }
+.sf-10 { top: 70%; left:  3%; width: 14vw; max-width: 200px; aspect-ratio: 16/10; transform: rotate(2deg); }
+.sf-11 { top: 70%; right: 3%; width: 20vw; max-width: 280px; aspect-ratio: 16/10; transform: rotate(-4deg); }
+.sf-12 { bottom:4%; left: 38%; width: 18vw; max-width: 250px; aspect-ratio: 16/10; transform: rotate(2deg); }
+.sf-13 { top: 42%; left:  6%; width: 12vw; max-width: 170px; aspect-ratio: 16/10; transform: rotate(8deg); }
+.sf-14 { top: 44%; right: 8%; width: 12vw; max-width: 170px; aspect-ratio: 16/10; transform: rotate(-7deg); }
+.sf-15 { bottom:6%; right:36%; width: 14vw; max-width: 200px; aspect-ratio: 16/10; transform: rotate(-2deg); }
+
+/* Video that zooms from tiny center card → fullscreen.
+   Element fills the stage; GSAP handles scale + centering via transform-origin. */
+.story-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-origin: 50% 50%;
+  z-index: 6;
+  overflow: hidden;
+  opacity: 0;
+  border-radius: 14px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  will-change: transform, opacity, border-radius;
+}
+.story-video video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.story-video-vignette {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(to bottom,
+      rgba(0,0,0,0.55) 0%,
+      rgba(0,0,0,0.1) 25%,
+      rgba(0,0,0,0.1) 65%,
+      rgba(0,0,0,0.7) 100%),
+    radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.35) 100%);
+}
+
+/* Phase 2 overlay — top-left title */
+.story-p2-title {
+  position: absolute;
+  top: 130px;
+  left: 56px;
+  z-index: 10;
+  max-width: min(640px, 50vw);
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.story-p2-title h3 {
+  font-size: clamp(1.4rem, 2.4vw, 2.2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.18;
+}
+.p2-title-strong { display: block; color: var(--white); }
+.p2-title-soft   { display: block; color: rgba(255, 255, 255, 0.45); }
+
+/* Phase 2 overlay — bottom-row stats */
+.story-stats {
+  position: absolute;
+  left: 56px;
+  right: 56px;
+  bottom: 56px;
+  z-index: 10;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.story-stat { display: flex; flex-direction: column; }
+.story-stat .ss-num {
+  font-size: clamp(1.6rem, 3.2vw, 3rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+.story-stat .ss-label {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.01em;
+}
+
+/* Phase 3 — closing headline. Centering handled by GSAP, same reasoning as h1. */
+.story-h3 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 11;
+  text-align: center;
+  font-size: clamp(2rem, 4.8vw, 4.4rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--white);
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+  max-width: 90vw;
+  opacity: 0;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+@media (max-width: 991px) {
+  .story-h1 { font-size: clamp(1.8rem, 7vw, 3rem); white-space: normal; max-width: 80vw; }
+  .story-stats { grid-template-columns: repeat(2, 1fr); gap: 20px; bottom: 32px; left: 24px; right: 24px; }
+  .story-p2-title { top: 96px; left: 24px; max-width: 70vw; }
+  .sf-img { border-radius: 10px; }
+}
+@media (max-width: 600px) {
+  .story-stats { grid-template-columns: 1fr 1fr; gap: 14px; }
+  .story-stat .ss-num { font-size: clamp(1.2rem, 5vw, 1.8rem); }
+  .story-stat .ss-label { font-size: 11px; }
+}
+
 /* ---------- Section Utilities ---------- */
 .section {
   padding: 100px 0;
@@ -797,163 +1297,326 @@ ul, ol { list-style: none; }
 /* ---------- Submit Demo Section ---------- */
 .demo-section {
   background: var(--black);
-  border-top: 1px solid var(--border-subtle);
+  padding: 80px 24px 160px;
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
 }
-.demo-grid {
-  display: grid;
-  grid-template-columns: 1fr 1.4fr;
-  gap: 80px;
-  align-items: start;
+
+/* Top bleed — warm red/pink radial glow at the section's top so the story
+   section's neon-red video atmosphere visually continues down into here
+   instead of cutting hard to black. Two stacked gradients: a wide ellipse
+   for the diffuse atmosphere + a narrower hot-spot in the centre. */
+.demo-section::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translateX(-50%);
+  width: 160vw;
+  height: 90vh;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 50% 45% at 50% 0%,
+      rgba(220, 50, 90, 0.28) 0%,
+      rgba(140, 30, 70, 0.18) 25%,
+      rgba(70, 20, 50, 0.08) 50%,
+      transparent 80%),
+    radial-gradient(ellipse 90% 70% at 50% 0%,
+      rgba(120, 30, 70, 0.18) 0%,
+      rgba(60, 20, 45, 0.08) 35%,
+      transparent 70%);
 }
-.demo-info-bullets {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  margin-top: 28px;
+
+/* Header (centered: brand mark → title → lede) */
+.demo-header {
+  max-width: 880px;
+  margin: 0 auto 64px;
+  text-align: center;
+  position: relative;
+  z-index: 2;
 }
-.demo-info-bullet {
-  display: flex;
+.demo-brand-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 96px;
+  height: 96px;
+  margin-bottom: 28px;
+  color: var(--white);
+  /* Slow breath so it feels alive */
+  animation: demoMarkBreath 5.5s var(--ease-std) infinite;
+}
+.demo-brand-mark svg { width: 100%; height: 100%; }
+@keyframes demoMarkBreath {
+  0%, 100% { transform: scale(1);    opacity: 1;    }
+  50%      { transform: scale(1.04); opacity: 0.92; }
+}
+
+.demo-section-title {
+  font-size: clamp(2.6rem, 6vw, 5.4rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  color: var(--white);
+  margin-bottom: 28px;
+}
+.demo-section-lede {
+  font-size: clamp(1rem, 1.15vw, 1.125rem);
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 640px;
+  margin: 0 auto;
+  text-wrap: balance;
+}
+
+/* Submission portal card */
+.demo-card {
+  position: relative;
+  z-index: 2;
+  max-width: 760px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 24px;
+  padding: 56px 52px 52px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  box-shadow:
+    0 30px 80px rgba(0, 0, 0, 0.45),
+    0 1px 0 rgba(255, 255, 255, 0.05) inset;
+}
+.demo-card-head {
+  text-align: center;
+  padding-bottom: 28px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+.demo-card-head-row {
+  display: inline-flex;
   align-items: center;
   gap: 12px;
+  margin-bottom: 10px;
+}
+.demo-card-mark {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  color: var(--white);
+}
+.demo-card-mark svg { width: 100%; height: 100%; }
+.demo-card-title {
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: var(--white);
+}
+.demo-card-subtitle {
   font-size: 14px;
-  color: var(--white-dim);
+  color: rgba(255, 255, 255, 0.55);
 }
-.demo-info-bullet::before {
-  content: '';
-  width: 5px;
-  height: 5px;
-  background: var(--white-faded);
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-.demo-form-wrap {
-  background: var(--glass-light);
-  border: 1px solid var(--border-med);
-  border-radius: var(--radius-lg);
-  padding: 40px;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
+
+/* ---------- Form fields ---------- */
+.demo-form { display: flex; flex-direction: column; gap: 22px; }
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 18px;
 }
 .form-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 16px;
+  gap: 10px;
+  position: relative;
 }
 .form-field.full { grid-column: 1 / -1; }
+
 .form-label {
-  font-size: 12px;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  color: var(--white-faded);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: rgba(255, 255, 255, 0.92);
   text-transform: uppercase;
 }
+
 .form-input,
 .form-select,
 .form-textarea {
-  background: var(--glass-light);
-  border: 1px solid var(--border-subtle);
-  border-radius: var(--radius-sm);
-  padding: 12px 16px;
-  font-size: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 16px 18px;
+  font-size: 14.5px;
   font-family: var(--font);
   color: var(--white-soft);
   outline: none;
   width: 100%;
-  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  transition: border-color 0.25s var(--ease-out),
+              background 0.25s var(--ease-out),
+              box-shadow 0.25s var(--ease-out);
 }
 .form-input::placeholder,
-.form-textarea::placeholder { color: var(--white-faded); }
+.form-textarea::placeholder {
+  color: rgba(255, 255, 255, 0.32);
+}
+.form-input:hover,
+.form-select:hover,
+.form-textarea:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
 .form-input:focus,
 .form-select:focus,
 .form-textarea:focus {
-  border-color: var(--border-strong);
-  background: var(--glass-med);
-  box-shadow: 0 0 0 3px rgba(255,255,255,0.04);
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.04);
 }
-.form-input.invalid,
-.form-select.invalid { border-color: var(--error); }
-.form-select { appearance: none; cursor: pointer; }
+
+/* Selects: native chevron stripped, custom one drawn via ::after */
+.form-select { appearance: none; cursor: pointer; padding-right: 44px; }
 .form-select-wrap { position: relative; }
 .form-select-wrap::after {
   content: '';
   position: absolute;
-  right: 14px;
+  right: 18px;
   top: 50%;
-  transform: translateY(-50%);
-  width: 0;
-  height: 0;
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
-  border-top: 5px solid var(--white-faded);
+  width: 10px;
+  height: 10px;
+  border-right: 1.6px solid rgba(255, 255, 255, 0.55);
+  border-bottom: 1.6px solid rgba(255, 255, 255, 0.55);
+  transform: translateY(-65%) rotate(45deg);
   pointer-events: none;
+  transition: border-color 0.2s;
 }
-.form-select option { background: var(--black-subtle); color: var(--white-soft); }
+.form-select-wrap:hover::after { border-color: rgba(255, 255, 255, 0.85); }
+.form-select option { background: #0a0a0a; color: var(--white-soft); }
+
 .form-textarea {
   resize: vertical;
-  min-height: 90px;
+  min-height: 120px;
+  line-height: 1.5;
 }
+
+/* Single combined checkbox with custom circular indicator */
 .form-check-wrap {
   display: flex;
   align-items: flex-start;
-  gap: 10px;
-  margin-bottom: 12px;
+  gap: 14px;
+  margin-top: 4px;
 }
 .form-check-input {
-  width: 16px;
-  height: 16px;
-  margin-top: 2px;
-  accent-color: var(--white-soft);
+  /* Hide native; the visual is .form-check-box */
+  position: absolute;
+  opacity: 0;
+  width: 22px;
+  height: 22px;
+  margin: 0;
   cursor: pointer;
-  flex-shrink: 0;
 }
 .form-check-label {
-  font-size: 13px;
-  color: var(--white-dim);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.5;
+  cursor: pointer;
+  user-select: none;
 }
-.form-check-label a { color: var(--white-muted); text-decoration: underline; }
+.form-check-label a {
+  color: var(--white);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.form-check-box {
+  flex-shrink: 0;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.02);
+  transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+  margin-top: 1px;
+  position: relative;
+}
+.form-check-input:hover ~ .form-check-label .form-check-box,
+.form-check-label:hover .form-check-box {
+  border-color: rgba(255, 255, 255, 0.6);
+}
+.form-check-input:checked ~ .form-check-label .form-check-box,
+.form-check-input:checked + .form-check-label .form-check-box {
+  background: var(--white);
+  border-color: var(--white);
+}
+.form-check-input:checked ~ .form-check-label .form-check-box::after,
+.form-check-input:checked + .form-check-label .form-check-box::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: 11px;
+  height: 6px;
+  border-left: 2px solid #000;
+  border-bottom: 2px solid #000;
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+.form-check-input:focus-visible ~ .form-check-label .form-check-box,
+.form-check-input:focus-visible + .form-check-label .form-check-box {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.08);
+}
+
+/* Submit button — white pill with arrow */
 .form-submit {
-  width: 100%;
-  padding: 15px 28px;
-  background: var(--white-soft);
+  align-self: center;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 32px;
+  margin-top: 12px;
+  background: var(--white);
   color: var(--black);
-  font-size: 15px;
-  font-weight: 600;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
   font-family: var(--font);
+  border: none;
   border-radius: var(--radius-full);
   cursor: pointer;
-  transition: background 0.2s, transform 0.2s;
-  border: none;
-  margin-top: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
+  transition: transform 0.25s var(--ease-out),
+              box-shadow 0.25s var(--ease-out),
+              background 0.25s var(--ease-out);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
 }
 .form-submit:hover {
-  background: var(--white-muted);
-  transform: scale(1.01);
+  background: var(--white);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
 }
+.form-submit:hover .form-submit-arrow { transform: translateX(4px); }
 .form-submit:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
 }
+.form-submit-arrow {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.25s var(--ease-out);
+}
+
+/* Success + error states */
 .form-success {
   display: none;
   align-items: center;
   gap: 14px;
-  background: rgba(0,130,243,0.08);
-  border: 1px solid rgba(0,130,243,0.2);
-  border-radius: var(--radius-md);
+  background: rgba(0, 130, 243, 0.08);
+  border: 1px solid rgba(0, 130, 243, 0.2);
+  border-radius: 14px;
   padding: 16px 20px;
-  margin-top: 16px;
+  margin-top: 8px;
   font-size: 14px;
   color: var(--white-dim);
 }
@@ -961,12 +1624,36 @@ ul, ol { list-style: none; }
 .form-error-msg {
   display: none;
   font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
   color: var(--error);
-  margin-top: 4px;
+  margin-top: -2px;
 }
 .form-field.has-error .form-error-msg { display: block; }
 .form-field.has-error .form-input,
-.form-field.has-error .form-select { border-color: var(--error); }
+.form-field.has-error .form-select,
+.form-field.has-error .form-textarea {
+  border-color: var(--error);
+  box-shadow: 0 0 0 4px rgba(234, 56, 76, 0.08);
+  animation: demoFieldShake 0.4s var(--ease-std);
+}
+@keyframes demoFieldShake {
+  0%, 100% { transform: translateX(0); }
+  20%      { transform: translateX(-4px); }
+  40%      { transform: translateX(4px); }
+  60%      { transform: translateX(-3px); }
+  80%      { transform: translateX(3px); }
+}
+
+@media (max-width: 767px) {
+  .demo-section { padding: 90px 16px 110px; }
+  .demo-header { margin-bottom: 48px; }
+  .demo-brand-mark { width: 72px; height: 72px; margin-bottom: 22px; }
+  .demo-card { padding: 36px 24px 32px; border-radius: 20px; }
+  .form-row { grid-template-columns: 1fr; gap: 22px; }
+  .demo-form { gap: 20px; }
+  .form-submit { width: 100%; justify-content: center; }
+}
 
 /* ---------- Team Section ---------- */
 .team-section {

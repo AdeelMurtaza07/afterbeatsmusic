@@ -389,6 +389,310 @@ function initAudioControl() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   10a. MANIFESTO — quote + word-split scroll reveal + CTA/team
+   ═══════════════════════════════════════════════════════════ */
+function initManifesto() {
+  const section = qs('.manifesto');
+  if (!section) return;
+
+  // 1) Split the manifesto paragraph into per-word spans
+  const textEl = qs('[data-manifesto-text]', section);
+  if (textEl && !textEl.dataset.split) {
+    const raw = textEl.innerHTML;               // preserve &mdash; etc.
+    // Wrap words; keep whitespace as-is so line breaks behave naturally
+    textEl.innerHTML = raw
+      .split(/(\s+)/)
+      .map(chunk => {
+        if (/^\s+$/.test(chunk) || chunk === '') return chunk;
+        return `<span class="mf-word">${chunk}</span>`;
+      })
+      .join('');
+    textEl.dataset.split = '1';
+  }
+
+  const reveals = qsa('[data-manifesto-reveal]', section);
+
+  // GSAP path
+  if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+    // Quote / CTA / team strip — fade-up on enter
+    reveals.forEach(el => {
+      const d = parseFloat(el.dataset.delay || 0) * 0.12;
+      gsap.to(el, {
+        opacity: 1,
+        y: 0,
+        duration: 0.9,
+        delay: d,
+        ease: 'power3.out',
+        scrollTrigger: { trigger: el, start: 'top 88%', once: true },
+      });
+    });
+
+    // Word-by-word scrubbed reveal, tied to scroll progress through the text
+    const words = qsa('.mf-word', textEl);
+    if (words.length) {
+      gsap.fromTo(words,
+        { opacity: 0.18, y: 18 },
+        {
+          opacity: 1, y: 0,
+          ease: 'power2.out',
+          stagger: { each: 0.05, from: 'start' },
+          scrollTrigger: {
+            trigger: textEl,
+            start: 'top 82%',
+            end: 'bottom 62%',
+            scrub: 0.8,
+          },
+        }
+      );
+    }
+    return;
+  }
+
+  // Fallback — CSS transition if GSAP isn't available
+  reveals.forEach(el => {
+    el.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateY(0)';
+    });
+  });
+  qsa('.mf-word', textEl).forEach(w => {
+    w.style.transition = 'opacity 0.4s ease';
+    w.style.opacity = '1';
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   10c. SHOWCASE STRIP — mixed image+video marquee
+        Perf strategy:
+        - Section observer: when the WHOLE strip leaves the viewport, all
+          videos are paused (frees the decoder pipeline entirely).
+        - Per-card observer: while the strip is visible, only the cards
+          whose bounding rect is inside the viewport keep playing. This
+          caps live decoders to whatever's actually on screen (~1–2)
+          even though the marquee duplicates the deck.
+        - Each video's currentTime is set from its data-offset so reused
+          clips look like different content.
+   ═══════════════════════════════════════════════════════════ */
+function initShowcaseStrip() {
+  const section = qs('.showcase-strip');
+  if (!section) return;
+
+  const videos = qsa('video', section);
+
+  // Helpers: safe play / safe pause
+  const safePlay  = v => { const p = v.play(); if (p && typeof p.catch === 'function') p.catch(() => {}); };
+  const safePause = v => { try { v.pause(); } catch (e) {} };
+
+  // Track whether the section is currently in viewport at all
+  let sectionVisible = true;
+
+  // Apply per-video time offsets + initial play attempt
+  videos.forEach(v => {
+    v.muted = true;
+    v.setAttribute('muted', '');
+    const offset = parseFloat(v.dataset.offset || 0);
+
+    const seek = () => {
+      try {
+        if (!isNaN(v.duration) && v.duration > 0) {
+          const target = Math.min(offset, Math.max(0, v.duration - 0.1));
+          if (Math.abs(v.currentTime - target) > 0.05) v.currentTime = target;
+        }
+      } catch (e) { /* metadata not ready */ }
+    };
+
+    if (v.readyState >= 1) seek();
+    else v.addEventListener('loadedmetadata', seek, { once: true });
+  });
+
+  if (!('IntersectionObserver' in window)) {
+    // No IO — just play everything (fallback)
+    videos.forEach(safePlay);
+    return;
+  }
+
+  // Per-card observer: only play the videos whose CARD is in the viewport.
+  // Keeps live 4K decoders to roughly the on-screen count (~1–2) instead
+  // of all 4 marquee duplicates.
+  const cardObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      const card = entry.target;
+      const v = card.querySelector('video');
+      if (!v) return;
+      if (entry.isIntersecting && sectionVisible) {
+        safePlay(v);
+      } else {
+        safePause(v);
+      }
+    });
+  }, {
+    root: null,
+    threshold: 0.15,
+  });
+  qsa('.sc-item.sc-video', section).forEach(card => cardObserver.observe(card));
+
+  // Section observer: hard kill all decoders when the strip is fully off-screen.
+  const sectionObserver = new IntersectionObserver(([entry]) => {
+    sectionVisible = entry.isIntersecting;
+    if (!sectionVisible) videos.forEach(safePause);
+    // When the section comes back, the per-card observer's next callback
+    // will resume the visible ones.
+  }, { threshold: 0 });
+  sectionObserver.observe(section);
+
+  // Pause the marquee on touch so mobile users can read individual cards
+  const track = qs('.showcase-track', section);
+  if (track) {
+    track.addEventListener('touchstart', () => {
+      track.style.animationPlayState = 'paused';
+    }, { passive: true });
+    track.addEventListener('touchend', () => {
+      track.style.animationPlayState = '';
+    }, { passive: true });
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   10d. STORY — pinned scrollytelling (flurry → zoom → stats → outro)
+        Single GSAP timeline scrubbed to a 4× viewport pin. Layers:
+          z:4  flurry images (15)        — phase 1
+          z:5  story-h1 headline         — phase 1
+          z:6  zooming video             — phase 2 (scales 0.15 → 1)
+          z:10 phase-2 title + stats     — phase 2
+          z:11 phase-3 closing headline  — phase 3
+        Video playback is gated to its zoom window so we don't decode
+        4K frames while the section is off-screen or in phase 1.
+   ═══════════════════════════════════════════════════════════ */
+function initStorySection() {
+  const story = qs('.story');
+  if (!story) return;
+  if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') return;
+
+  const flurry    = qsa('.sf-img', story);
+  const videoWrap = qs('[data-story-video]', story);
+  const video     = qs('#storyVideo', story);
+  const h1        = qs('[data-story-h1]', story);
+  const p2title   = qs('[data-story-p2title]', story);
+  const stats     = qs('[data-story-stats]', story);
+  const h3        = qs('[data-story-h3]', story);
+
+  // Set the per-clip offset on the video so the same source feels distinct
+  if (video) {
+    video.muted = true;
+    video.setAttribute('muted', '');
+    const offset = parseFloat(video.dataset.offset || 0);
+    const seek = () => {
+      try {
+        if (!isNaN(video.duration) && video.duration > 0) {
+          video.currentTime = Math.min(offset, Math.max(0, video.duration - 0.1));
+        }
+      } catch (e) { /* metadata not ready */ }
+    };
+    if (video.readyState >= 1) seek();
+    else video.addEventListener('loadedmetadata', seek, { once: true });
+  }
+
+  // ── Initial states (scrub will tween from these) ─────────────
+  // CRITICAL: centering for h1 + h3 is owned by GSAP via xPercent/yPercent so
+  // the transform-tweens don't wipe the CSS translate(-50%,-50%). Without this
+  // the elements jump to the right/below center the moment GSAP applies scale
+  // and the section reads as "all black" because everything is offscreen.
+  // Each flurry image starts FAR back in 3D space + blurred (depth-of-field).
+  // The parent .story-flurry has perspective: 1400px in CSS, so a translateZ
+  // of -1600 makes the image read as ~44% size from the camera — distant.
+  // GSAP preserves the per-image CSS rotation (rotate(-4deg) etc.) because
+  // it merges with the existing transform rather than replacing it.
+  flurry.forEach((img) => {
+    gsap.set(img, { opacity: 0, z: -1600, filter: 'blur(10px)' });
+  });
+  gsap.set(h1,        { opacity: 0, scale: 0.92, xPercent: -50, yPercent: -50 });
+  gsap.set(videoWrap, { opacity: 0, scale: 0.15, borderRadius: 14 });
+  gsap.set(p2title,   { opacity: 0, y: -16 });
+  gsap.set(stats,     { opacity: 0, y: 24 });
+  gsap.set(h3,        { opacity: 0, scale: 0.94, xPercent: -50, yPercent: -50 });
+
+  const safePlay  = () => { if (!video) return; const p = video.play(); if (p && p.catch) p.catch(() => {}); };
+  const safePause = () => { try { video && video.pause(); } catch (e) {} };
+
+  // ── Master timeline ──────────────────────────────────────────
+  // No JS pinning here — the section uses position:sticky in CSS for the
+  // pin behaviour. ScrollTrigger only scrubs the timeline against scroll
+  // progress through the 400vh of scrub-room inside the section.
+  const tl = gsap.timeline({
+    scrollTrigger: {
+      trigger: story,
+      start: 'top top',
+      end: 'bottom bottom',   // matches the 500vh section height (400vh of scrub + 100vh visible)
+      scrub: 0.6,
+      onUpdate: (self) => {
+        if (!video) return;
+        const p = self.progress;
+        const shouldPlay = p > 0.36 && p < 0.99;
+        if (shouldPlay && video.paused) safePlay();
+        else if (!shouldPlay && !video.paused) safePause();
+      },
+      onLeave: safePause,
+      onLeaveBack: safePause,
+    },
+  });
+
+  // Phase 1.0 — opening headline fades in
+  tl.to(h1, { opacity: 1, scale: 1, duration: 0.04, ease: 'power2.out' }, 0);
+
+  // Phase 1.1 — image flurry, true 3D approach.
+  // Each image: approach from z:-1600 (small + blurred) to z:0 (natural CSS
+  // size, fully sharp), holds an instant, then drifts forward to z:300
+  // (~17% larger via perspective math) while fading + a touch of blur so it
+  // reads as passing the camera. The CSS rotation per .sf-N is preserved.
+  flurry.forEach((img, i) => {
+    const t = 0.05 + (i / flurry.length) * 0.38;     // 5% → ~43%
+    // Approach — slow zoom-in from depth, focus pulls in
+    tl.to(img, {
+      opacity: 1,
+      z: 0,
+      filter: 'blur(0px)',
+      duration: 0.10,
+      ease: 'power2.out',
+    }, t);
+    // Pass-through — small forward drift + fade + slight motion blur
+    tl.to(img, {
+      opacity: 0,
+      z: 300,
+      filter: 'blur(4px)',
+      duration: 0.05,
+      ease: 'power1.in',
+    }, t + 0.11);
+  });
+
+  // Phase 1 → 2 — opening headline pushes back + fades
+  tl.to(h1, { opacity: 0, scale: 1.25, duration: 0.06 }, 0.42);
+
+  // Phase 2 — video reveals, then continuously scales up to fill viewport.
+  // Border-radius animates to 0 once it owns the whole viewport.
+  tl.to(videoWrap, { opacity: 1, duration: 0.04 }, 0.40);
+  tl.to(videoWrap, {
+    scale: 1.0,
+    duration: 0.42,
+    ease: 'power2.inOut',
+  }, 0.40);
+  tl.to(videoWrap, { borderRadius: 0, duration: 0.06 }, 0.78);
+
+  // Phase 2 overlay — title + stats fade in once video is ~75% scaled
+  tl.to(p2title, { opacity: 1, y: 0, duration: 0.05, ease: 'power2.out' }, 0.66);
+  tl.to(stats,   { opacity: 1, y: 0, duration: 0.06, ease: 'power2.out' }, 0.70);
+
+  // Phase 2 → 3 — phase-2 overlay clears
+  tl.to(p2title, { opacity: 0, y: -16, duration: 0.04 }, 0.84);
+  tl.to(stats,   { opacity: 0, y: 24,  duration: 0.04 }, 0.84);
+
+  // Phase 3 — closing headline rises into place
+  tl.to(h3, { opacity: 1, scale: 1, duration: 0.06, ease: 'power2.out' }, 0.88);
+
+  // Video gating is handled by the timeline's ScrollTrigger.onUpdate above.
+}
+
+/* ═══════════════════════════════════════════════════════════
    10b. HERO VIDEO — load handling, on-enter reveal, scroll parallax
    ═══════════════════════════════════════════════════════════ */
 function initHeroVideo() {
@@ -469,16 +773,32 @@ function initHeroVideo() {
    11. DEMO SUBMISSION FORM
    ═══════════════════════════════════════════════════════════ */
 function initDemoForm() {
-  const form    = qs('#demoForm');
+  const form      = qs('#demoForm');
   const submitBtn = qs('#formSubmit');
   const success   = qs('#formSuccess');
   if (!form) return;
 
-  // Clear error state on user input
+  // The button has a <span class="form-submit-label"> + an arrow SVG. We only
+  // want to swap the label text on submit, so write the original aside for restore.
+  const labelEl   = qs('.form-submit-label', submitBtn);
+  const arrowEl   = qs('.form-submit-arrow', submitBtn);
+  const labelOrig = labelEl ? labelEl.textContent : 'Submit Your Demo';
+
+  // Clear error state as the user types / selects
   qsa('.form-input, .form-select, .form-textarea', form).forEach(input => {
     input.addEventListener('input', () => {
       input.classList.remove('invalid');
       input.closest('.form-field')?.classList.remove('has-error');
+    });
+    input.addEventListener('change', () => {
+      input.classList.remove('invalid');
+      input.closest('.form-field')?.classList.remove('has-error');
+    });
+  });
+  // Checkbox: clear error on toggle
+  qsa('.form-check-input', form).forEach(box => {
+    box.addEventListener('change', () => {
+      box.closest('.form-check-wrap')?.classList.remove('has-error');
     });
   });
 
@@ -486,9 +806,10 @@ function initDemoForm() {
     e.preventDefault();
 
     let valid = true;
+    let firstInvalid = null;
 
     qsa('[required]', form).forEach(field => {
-      const group = field.closest('.form-field');
+      const group = field.closest('.form-field, .form-check-wrap');
       let ok = false;
 
       if (field.type === 'email')
@@ -505,6 +826,7 @@ function initDemoForm() {
       if (!ok) {
         field.classList.add('invalid');
         group?.classList.add('has-error');
+        if (!firstInvalid) firstInvalid = field;
         valid = false;
       } else {
         field.classList.remove('invalid');
@@ -514,19 +836,25 @@ function initDemoForm() {
 
     if (!valid) {
       if (typeof gsap !== 'undefined') {
-        gsap.fromTo(form, { x: -8 }, { x: 0, duration: 0.45, ease: 'elastic.out(1,0.3)' });
+        gsap.fromTo(form, { x: -6 }, { x: 0, duration: 0.45, ease: 'elastic.out(1,0.3)' });
+      }
+      // Drop focus on the first invalid field so keyboard users land in the right place
+      if (firstInvalid && typeof firstInvalid.focus === 'function') {
+        firstInvalid.focus({ preventScroll: false });
       }
       return;
     }
 
-    submitBtn.disabled    = true;
-    submitBtn.textContent = 'Sending…';
+    submitBtn.disabled = true;
+    if (labelEl) labelEl.textContent = 'Sending…';
+    if (arrowEl) arrowEl.style.opacity = '0.4';
 
     // Simulate async — replace with real fetch() in production
     setTimeout(() => {
       form.reset();
-      submitBtn.disabled    = false;
-      submitBtn.textContent = 'Submit Demo';
+      submitBtn.disabled = false;
+      if (labelEl) labelEl.textContent = labelOrig;
+      if (arrowEl) arrowEl.style.opacity = '';
 
       if (success) {
         success.classList.add('show');
@@ -810,7 +1138,7 @@ function initBarba() {
     }],
     views: [{
       namespace: 'home',
-      afterEnter() { initHeroVideo(); },
+      afterEnter() { initHeroVideo(); initManifesto(); initShowcaseStrip(); initStorySection(); },
     }],
   });
 }
@@ -845,6 +1173,15 @@ function initPageScripts() {
   if (ns === 'home' || qs('.hero-video')) {
     initHeroVideo();
   }
+  if (qs('.manifesto')) {
+    initManifesto();
+  }
+  if (qs('.showcase-strip')) {
+    initShowcaseStrip();
+  }
+  if (qs('.story')) {
+    initStorySection();
+  }
   // Legacy spotlight — safe no-op if the markup has been replaced
   if (qs('.kaitonote-spotlight')) {
     initSpotlight();
@@ -865,4 +1202,40 @@ document.addEventListener('DOMContentLoaded', () => {
   initPageScripts();
   // Barba init after page scripts so initial page works without transitions too
   initBarba();
+});
+
+/* ═══════════════════════════════════════════════════════════
+   POST-LOAD REFRESH (critical for pinned ScrollTriggers)
+   ───────────────────────────────────────────────────────────
+   Pin positions are calculated once at DOMContentLoaded — but at that
+   moment fonts (Switzer via Fontshare) and lazy/below-the-fold images
+   haven't settled, so the section's `top` shifts by hundreds of pixels
+   over the next second. The pinned story timeline ends up engaging at a
+   stale scroll position, which is exactly why a fast forward scroll
+   reads as "all black": the pinned section is offset off-viewport.
+
+   We force a refresh after every event that can shift layout:
+     • window load        — all images fully decoded
+     • document.fonts.ready — Switzer swap complete
+     • ResizeObserver on the elements above the story (one-shot, in case
+       any text reflow happens after fonts.ready resolves)
+
+   ScrollTrigger.refresh() recomputes start/end for every trigger, so
+   the next scroll movement uses correct positions.
+   ═══════════════════════════════════════════════════════════ */
+function forceScrollTriggerRefresh() {
+  if (typeof ScrollTrigger === 'undefined') return;
+  ScrollTrigger.refresh();
+}
+
+window.addEventListener('load', forceScrollTriggerRefresh);
+
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(forceScrollTriggerRefresh).catch(() => {});
+}
+
+// Belt-and-suspenders: refresh again ~600ms after load to catch any
+// late layout from images that finish decoding after the load event fires.
+window.addEventListener('load', () => {
+  setTimeout(forceScrollTriggerRefresh, 600);
 });
