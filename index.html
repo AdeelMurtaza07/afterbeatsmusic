@@ -537,12 +537,12 @@
     </section>
 
     <!-- ── Team ── -->
-    <section class="team-section section" id="team">
-      <div class="container">
-        <div data-animate-fade-in>
+    <section class="team-section" id="team">
+      <div class="team-inner">
+        <div class="team-head" data-animate-fade-in>
           <span class="section-eyebrow">Our Team</span>
-          <h2 class="section-heading">The people behind<br>the music.</h2>
-          <p class="section-body">A dedicated team of curators, music lovers, and industry professionals working around the clock to discover and amplify the best sounds from around the world.</p>
+          <h2 class="team-heading">The people behind<br>the music.</h2>
+          <p class="team-body">A dedicated team of curators, music lovers, and industry professionals working around the clock to discover and amplify the best sounds from around the world.</p>
         </div>
         <div class="team-grid" data-animate-fade-in data-delay="2">
           <div class="team-avatar ta-1" title="Alex Rivera" data-animate-employee-avatar>AR</div>
@@ -555,43 +555,98 @@
           <div class="team-avatar ta-8" title="Sofia Rossi" data-animate-employee-avatar>SR</div>
           <div class="team-avatar ta-9" title="Dev Okafor" data-animate-employee-avatar>DO</div>
           <div class="team-avatar team-avatar-more">+33</div>
-          <div class="sound-wave" aria-hidden="true">
-            <div class="bar"></div><div class="bar"></div>
-            <div class="bar"></div><div class="bar"></div>
-            <div class="bar"></div>
-          </div>
+        </div>
+        <div class="sound-wave" aria-hidden="true" data-animate-fade-in data-delay="3">
+          <div class="bar"></div><div class="bar"></div>
+          <div class="bar"></div><div class="bar"></div>
+          <div class="bar"></div>
         </div>
       </div>
     </section>
 
-    <!-- ── Final CTA ── -->
-    <section class="final-cta section" data-animate-fade-in>
-      <div class="container final-cta-wrap">
-        <h2 class="final-cta-title">Ready to find your<br>new favorite sound?</h2>
-        <div class="final-cta-btns">
+    <!-- ── Final CTA (Video BG) ── -->
+    <section class="final-cta" id="cta">
+
+      <!-- Video background — swap the <source src> to change the clip -->
+      <div class="final-cta-bg" aria-hidden="true">
+        <video id="finalCtaVideo" muted loop playsinline preload="metadata" autoplay>
+          <source src="images/9757086-uhd_3840_2160_24fps.mp4" type="video/mp4">
+        </video>
+        <div class="final-cta-overlay"></div>
+      </div>
+
+      <div class="final-cta-wrap" data-animate-fade-in>
+        <h2 class="final-cta-title">Ready to find your new favorite<br>sound? Start listening now.</h2>
+        <p class="final-cta-sublede" data-animate-fade-in data-delay="1">
+          Join millions who already found their sound with afterbeatsmusic.
+        </p>
+        <div class="final-cta-btns" data-animate-fade-in data-delay="2">
           <a href="#" class="final-cta-btn primary">
-            <svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><polygon points="5,3 19,12 5,21"/></svg>
-            Listen Now
+            <span>Listen Now</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+            </svg>
           </a>
-          <a href="#channels" class="final-cta-btn ghost">Browse Playlists</a>
+          <a href="#" class="final-cta-btn ghost">Browse Playlists</a>
         </div>
       </div>
     </section>
 
   </main>
 
-  <!-- ══ FOOTER ═══════════════════════════════════════════ -->
+  <!-- ══ FOOTER (Elevated card) ═══════════════════════════ -->
   <footer class="master-footer">
-    <div class="container">
+    <div class="footer-card">
+
       <div class="footer-top">
+        <!-- Brand block -->
         <div class="footer-brand">
-          <a href="index.html" class="footer-logo">afterbeatsmusic</a>
-          <p class="footer-tagline">Late nights. Deep feels. Your sound.<br>The Internet, Worldwide.</p>
-          <a href="mailto:contact@afterbeatsmusic.com" class="footer-email">contact@afterbeatsmusic.com</a>
+          <a href="index.html" class="footer-logo">
+            <span class="footer-logo-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M10 8l6 4-6 4z" fill="currentColor" stroke="none"/>
+              </svg>
+            </span>
+            <span class="footer-logo-text">afterbeatsmusic</span>
+          </a>
+
+          <address class="footer-address">
+            afterbeatsmusic HQ<br>
+            The Internet<br>
+            Worldwide
+          </address>
+
+          <div class="footer-line">
+            <a href="https://youtube.com" class="footer-link-strong" target="_blank" rel="noreferrer">YouTube</a>
+            <span class="footer-line-sub">(Where the music lives.)</span>
+          </div>
+
+          <a href="mailto:contact@afterbeatsmusic.com" class="footer-link-strong">contact@afterbeatsmusic.com</a>
+
+          <div class="footer-socials">
+            <a href="#" class="footer-social-link" aria-label="YouTube">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.8 8s-.2-1.4-.8-2c-.8-.8-1.6-.9-2-.9C16.6 5 12 5 12 5s-4.6 0-7 .1c-.4.1-1.2.1-2 .9-.6.6-.8 2-.8 2S2 9.6 2 11.2v1.5c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.8.8 1.8.8 2.3.9C6.8 19 12 19 12 19s4.6 0 7-.1c.4-.1 1.2-.1 2-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.5C22 9.6 21.8 8 21.8 8zM9.7 14.5v-5.5l5.5 2.8-5.5 2.7z"/></svg>
+            </a>
+            <a href="#" class="footer-social-link" aria-label="Instagram">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
+            </a>
+            <a href="#" class="footer-social-link" aria-label="X / Twitter">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="#" class="footer-social-link" aria-label="SoundCloud">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.56 8.87V17h8.76c1.25 0 2.32-.97 2.38-2.21.06-1.3-.93-2.39-2.21-2.42-.04 0-.08 0-.12.01-.19-2.32-2.13-4.15-4.51-4.15-1.1 0-2.11.39-2.88 1.03-.32-.19-.67-.29-1.05-.29-.03 0-.06 0-.09 0-.75.04-1.34.64-1.34 1.39 0 .38.15.72.39.97m-9.87 5.18c0 1.62 1.32 2.93 2.95 2.93.07 0 .14 0 .21-.01H8.5V7.83c-.28-.13-.58-.19-.9-.19-1.62 0-2.94 1.32-2.94 2.94 0 .24.03.47.09.69C3.01 11.54 1.69 12.69 1.69 14.05z"/></svg>
+            </a>
+            <a href="#" class="footer-social-link" aria-label="Spotify">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
+            </a>
+          </div>
         </div>
+
+        <!-- 3-column nav -->
         <div class="footer-cols">
           <div class="footer-col">
-            <h4>Popular Channels</h4>
+            <h4>Popular</h4>
             <a href="#">afterbeatsmusic</a>
             <a href="#">Rock</a>
             <a href="#">Latin</a>
@@ -613,25 +668,17 @@
           </div>
         </div>
       </div>
+
+      <!-- Decorative big mark + copyright row -->
       <div class="footer-bottom">
-        <div class="footer-socials">
-          <a href="#" class="footer-social-link" aria-label="YouTube">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M21.8 8s-.2-1.4-.8-2c-.8-.8-1.6-.9-2-.9C16.6 5 12 5 12 5s-4.6 0-7 .1c-.4.1-1.2.1-2 .9-.6.6-.8 2-.8 2S2 9.6 2 11.2v1.5c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.8.8 1.8.8 2.3.9C6.8 19 12 19 12 19s4.6 0 7-.1c.4-.1 1.2-.1 2-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.5C22 9.6 21.8 8 21.8 8zM9.7 14.5v-5.5l5.5 2.8-5.5 2.7z"/></svg>
-          </a>
-          <a href="#" class="footer-social-link" aria-label="Instagram">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg>
-          </a>
-          <a href="#" class="footer-social-link" aria-label="X / Twitter">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-          </a>
-          <a href="#" class="footer-social-link" aria-label="SoundCloud">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M11.56 8.87V17h8.76c1.25 0 2.32-.97 2.38-2.21.06-1.3-.93-2.39-2.21-2.42-.04 0-.08 0-.12.01-.19-2.32-2.13-4.15-4.51-4.15-1.1 0-2.11.39-2.88 1.03-.32-.19-.67-.29-1.05-.29-.03 0-.06 0-.09 0-.75.04-1.34.64-1.34 1.39 0 .38.15.72.39.97m-9.87 5.18c0 1.62 1.32 2.93 2.95 2.93.07 0 .14 0 .21-.01H8.5V7.83c-.28-.13-.58-.19-.9-.19-1.62 0-2.94 1.32-2.94 2.94 0 .24.03.47.09.69C3.01 11.54 1.69 12.69 1.69 14.05z"/></svg>
-          </a>
-          <a href="#" class="footer-social-link" aria-label="Spotify">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-          </a>
+        <span class="footer-copyright">&copy; <span class="copyright-year">2026</span> afterbeatsmusic. All rights reserved.</span>
+        <div class="footer-decor-mark" aria-hidden="true">
+          <svg viewBox="0 0 240 240" fill="none" stroke="currentColor" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="120" cy="120" r="100"/>
+            <path d="M100 80l60 40-60 40z" fill="currentColor" stroke="none"/>
+          </svg>
         </div>
-        <span class="footer-copyright">&copy; <span class="copyright-year">2025</span> afterbeatsmusic. All rights reserved.</span>
+        <span class="footer-bottom-spacer" aria-hidden="true"></span>
       </div>
     </div>
   </footer>

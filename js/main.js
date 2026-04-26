@@ -693,6 +693,27 @@ function initStorySection() {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   10e. FINAL CTA VIDEO — autoplay + IO-gated playback
+   ═══════════════════════════════════════════════════════════ */
+function initFinalCtaVideo() {
+  const video = qs('#finalCtaVideo');
+  if (!video) return;
+
+  video.muted = true;
+  video.setAttribute('muted', '');
+  const tryPlay = () => { const p = video.play(); if (p && p.catch) p.catch(() => {}); };
+  tryPlay();
+  video.addEventListener('canplay', tryPlay, { once: true });
+
+  if (!('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) tryPlay();
+    else { try { video.pause(); } catch (e) {} }
+  }, { threshold: 0.05 });
+  io.observe(video);
+}
+
+/* ═══════════════════════════════════════════════════════════
    10b. HERO VIDEO — load handling, on-enter reveal, scroll parallax
    ═══════════════════════════════════════════════════════════ */
 function initHeroVideo() {
@@ -1181,6 +1202,9 @@ function initPageScripts() {
   }
   if (qs('.story')) {
     initStorySection();
+  }
+  if (qs('#finalCtaVideo')) {
+    initFinalCtaVideo();
   }
   // Legacy spotlight — safe no-op if the markup has been replaced
   if (qs('.kaitonote-spotlight')) {
