@@ -693,24 +693,30 @@ function initStorySection() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   10e. FINAL CTA VIDEO — autoplay + IO-gated playback
+   10e. AUTOPLAY BG VIDEOS — generic init for any decorative video
+        Tag any background <video> with [data-autoplay-bg-video] and it
+        gets safe-autoplay (Safari/iOS friendly) + an IntersectionObserver
+        that pauses the decoder while the element is offscreen.
+        Used by: final-CTA on home, contact hero on contact.html.
    ═══════════════════════════════════════════════════════════ */
-function initFinalCtaVideo() {
-  const video = qs('#finalCtaVideo');
-  if (!video) return;
+function initAutoplayBgVideos() {
+  const videos = qsa('[data-autoplay-bg-video], #finalCtaVideo');
+  if (!videos.length) return;
 
-  video.muted = true;
-  video.setAttribute('muted', '');
-  const tryPlay = () => { const p = video.play(); if (p && p.catch) p.catch(() => {}); };
-  tryPlay();
-  video.addEventListener('canplay', tryPlay, { once: true });
+  videos.forEach(video => {
+    video.muted = true;
+    video.setAttribute('muted', '');
+    const tryPlay = () => { const p = video.play(); if (p && p.catch) p.catch(() => {}); };
+    tryPlay();
+    video.addEventListener('canplay', tryPlay, { once: true });
 
-  if (!('IntersectionObserver' in window)) return;
-  const io = new IntersectionObserver(([entry]) => {
-    if (entry.isIntersecting) tryPlay();
-    else { try { video.pause(); } catch (e) {} }
-  }, { threshold: 0.05 });
-  io.observe(video);
+    if (!('IntersectionObserver' in window)) return;
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) tryPlay();
+      else { try { video.pause(); } catch (e) {} }
+    }, { threshold: 0.05 });
+    io.observe(video);
+  });
 }
 
 /* ═══════════════════════════════════════════════════════════
@@ -1203,9 +1209,7 @@ function initPageScripts() {
   if (qs('.story')) {
     initStorySection();
   }
-  if (qs('#finalCtaVideo')) {
-    initFinalCtaVideo();
-  }
+  initAutoplayBgVideos();
   // Legacy spotlight — safe no-op if the markup has been replaced
   if (qs('.kaitonote-spotlight')) {
     initSpotlight();

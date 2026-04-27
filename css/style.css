@@ -592,7 +592,7 @@ ul, ol { list-style: none; }
   position: relative;
   z-index: 10;
   width: calc(100% - 48px);
-  max-width: 1200px;
+  max-width: 800px;
   margin: 0 auto;
   padding: 28px 8px 44px;
 }
@@ -613,30 +613,43 @@ ul, ol { list-style: none; }
 .hero-partners-track {
   display: flex;
   align-items: center;
-  gap: 44px;
+  gap: 64px;                     /* wider gap suits image logos better than text */
   width: max-content;
-  animation: hpScroll 36s linear infinite;
+  animation: hpScroll 32s linear infinite;
 }
 .hero-partners-track:hover { animation-play-state: paused; }
+
+/* Logo images — uniform height, native aspect ratio, normalized to white.
+   The `brightness(0) invert(1)` filter renders any source PNG (whatever its
+   original colour is) as pure white, then opacity dims them uniformly so no
+   single logo dominates regardless of its native rendering weight. */
 .hp-logo {
   flex-shrink: 0;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  color: rgba(255, 255, 255, 0.8);
-  white-space: nowrap;
-  transition: color 0.2s;
-  text-transform: uppercase;
+  height: 38px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+  display: block;
+  filter: brightness(0) invert(1);
+  opacity: 0.55;
+  transition: opacity 0.3s var(--ease-out),
+              transform 0.3s var(--ease-out),
+              filter 0.3s var(--ease-out);
+  user-select: none;
+  -webkit-user-drag: none;
 }
-.hp-logo:hover { color: var(--white); }
-.hp-dot {
-  flex-shrink: 0;
-  color: rgba(255, 255, 255, 0.25);
-  font-size: 18px;
+.hp-logo:hover {
+  opacity: 1;
+  transform: scale(1.06);
 }
 @keyframes hpScroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
+}
+
+@media (max-width: 767px) {
+  .hero-partners-track { gap: 44px; }
+  .hp-logo { height: 28px; max-width: 140px; }
 }
 
 /* Scroll cue at bottom center */
@@ -1980,7 +1993,14 @@ ul, ol { list-style: none; }
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.4;
+  object-position: center;
+  opacity: 0.85;
+  /* Slow ken-burns so a paused/looping clip still feels alive */
+  animation: contactHeroZoom 26s ease-in-out infinite alternate;
+}
+@keyframes contactHeroZoom {
+  from { transform: scale(1.04) translateY(0); }
+  to   { transform: scale(1.10) translateY(-1%); }
 }
 /* CSS video simulation (animated gradient) */
 .contact-video-sim {
@@ -2012,7 +2032,14 @@ ul, ol { list-style: none; }
 .contact-video-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, var(--black) 0%, rgba(0,0,0,0.3) 50%, transparent 100%);
+  pointer-events: none;
+  background:
+    linear-gradient(to top,
+      var(--black) 0%,
+      rgba(0,0,0,0.55) 35%,
+      rgba(0,0,0,0.25) 65%,
+      rgba(0,0,0,0.4) 100%),
+    radial-gradient(ellipse at center, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 100%);
 }
 .contact-hero-content {
   position: relative;
