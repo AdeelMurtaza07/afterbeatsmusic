@@ -2137,50 +2137,7 @@ ul, ol { list-style: none; }
 .contact-team-avatars .team-avatar:first-child { margin-left: 0; }
 
 /* ---------- Hall of Fame Page ---------- */
-.hof-stats-bar {
-  background: var(--black-rich);
-  border-bottom: 1px solid var(--border-subtle);
-  padding: 20px 32px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  max-width: 100%;
-}
-.hof-stats-bar-inner {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-}
-.hof-bar-logo {
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  color: var(--white-soft);
-}
-.hof-bar-divider {
-  width: 1px;
-  height: 20px;
-  background: var(--border-med);
-}
-.hof-bar-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--white-muted);
-  letter-spacing: -0.01em;
-}
-.hof-bar-views {
-  font-size: 13px;
-  color: var(--white-faded);
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-.hof-bar-views strong {
-  color: var(--white-dim);
-  font-weight: 600;
-}
+/* (Top stats bar removed — its info now lives in .hof-stats-pill at the bottom) */
 .hof-gallery {
   padding: 48px 0 80px;
   background: var(--black);
@@ -2578,7 +2535,6 @@ ul, ol { list-style: none; }
   .footer-top { flex-direction: column; gap: 40px; }
   .footer-cols { gap: 32px; }
   .footer-bottom { flex-direction: column; align-items: flex-start; }
-  .hof-stats-bar { padding: 16px 20px; }
   .articles-header { padding: 0 20px; flex-direction: column; align-items: flex-start; }
 
   .hero-content { padding: 100px 18px 16px; }
@@ -2866,7 +2822,7 @@ ul, ol { list-style: none; }
 .hof-sphere-viewer {
   position: relative;
   width: 100%;
-  height: calc(100vh - var(--nav-h) - 61px); /* minus nav + stats bar */
+  height: calc(100vh - var(--nav-h));   /* full viewport below the floating nav */
   min-height: 560px;
   overflow: hidden;
   perspective: 1200px;
@@ -2997,25 +2953,69 @@ ul, ol { list-style: none; }
     linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, transparent 15%, transparent 85%, rgba(0,0,0,0.5) 100%);
   z-index: 4;
 }
-.hof-hint {
+/* Floating stats pill — sits at the bottom of the sphere viewer.
+   Replaces the old top stats bar AND the old drag/click hint. */
+.hof-stats-pill {
   position: absolute;
-  bottom: 28px;
+  bottom: 32px;
   left: 50%;
   transform: translateX(-50%);
-  font-size: 11px;
-  font-weight: 600;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255,255,255,0.5);
-  pointer-events: none;
-  z-index: 5;
-  padding: 8px 16px;
-  border: 1px solid rgba(255,255,255,0.12);
+  z-index: 6;
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px 14px 18px;
   border-radius: 999px;
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(8px);
-  animation: hintPulse 3s ease-in-out infinite;
+  background: rgba(0, 0, 0, 0.62);
+  backdrop-filter: blur(22px) saturate(160%);
+  -webkit-backdrop-filter: blur(22px) saturate(160%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.55);
+  pointer-events: none;
+  white-space: nowrap;
+  /* Slide up + fade in once the page has settled */
+  opacity: 0;
+  animation: hofPillReveal 0.8s var(--ease-out) 0.45s forwards;
 }
+.hsp-mark {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--white);
+  flex-shrink: 0;
+}
+.hsp-mark svg { width: 100%; height: 100%; }
+.hsp-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.18);
+  flex-shrink: 0;
+}
+.hsp-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+  color: rgba(255, 255, 255, 0.82);
+}
+.hsp-views {
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  color: var(--white);
+}
+@keyframes hofPillReveal {
+  from { opacity: 0; transform: translate(-50%, 18px); }
+  to   { opacity: 1; transform: translate(-50%, 0); }
+}
+@media (max-width: 600px) {
+  .hof-stats-pill { gap: 12px; padding: 12px 18px 12px 14px; bottom: 24px; }
+  .hsp-mark { width: 22px; height: 22px; }
+  .hsp-divider { height: 18px; }
+  .hsp-title, .hsp-views { font-size: 12.5px; }
+}
+
+/* Legacy keyframe kept for any other consumer (none on this page now) */
 @keyframes hintPulse {
   0%, 100% { opacity: 0.5; }
   50%      { opacity: 0.95; }

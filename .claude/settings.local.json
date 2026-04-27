@@ -9,7 +9,8 @@
       "WebFetch(domain:cdn.prod.website-files.com)",
       "Read(//tmp/**)",
       "Bash(start \"\" \"d:/PO/afterbeatsmusic/index.html\")",
-      "Bash(start \"\" \"d:/PO/afterbeatsmusic/contact.html\")"
+      "Bash(start \"\" \"d:/PO/afterbeatsmusic/contact.html\")",
+      "Bash(start \"\" \"d:/PO/afterbeatsmusic/hall-of-fame.html\")"
     ]
   }
 }
