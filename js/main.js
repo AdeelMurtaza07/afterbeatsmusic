@@ -803,7 +803,14 @@ function initDemoForm() {
   const form      = qs('#demoForm');
   const submitBtn = qs('#formSubmit');
   const success   = qs('#formSuccess');
+  const errorEl   = qs('#formError');
+  const errorMsg  = qs('#formErrorMsg');
   if (!form) return;
+
+  // Web3Forms endpoint. The form's action attribute points here too — JS just
+  // intercepts to give us in-page UX (loading state, JSON response handling)
+  // instead of a full-page redirect.
+  const ENDPOINT = form.getAttribute('action') || 'https://api.web3forms.com/submit';
 
   // The button has a <span class="form-submit-label"> + an arrow SVG. We only
   // want to swap the label text on submit, so write the original aside for restore.
@@ -872,25 +879,72 @@ function initDemoForm() {
       return;
     }
 
+    // Honeypot short-circuit. If the hidden `botcheck` field has any value,
+    // a bot filled it — silently pretend we sent and bail out. Web3Forms also
+    // drops these server-side; this just saves the round trip.
+    const honeypot = form.querySelector('input[name="botcheck"]');
+    if (honeypot && honeypot.value.trim() !== '') {
+      form.reset();
+      return;
+    }
+
+    // Loading state
     submitBtn.disabled = true;
     if (labelEl) labelEl.textContent = 'Sending…';
     if (arrowEl) arrowEl.style.opacity = '0.4';
+    if (errorEl) errorEl.classList.remove('show');
 
-    // Simulate async — replace with real fetch() in production
-    setTimeout(() => {
-      form.reset();
+    const restoreButton = () => {
       submitBtn.disabled = false;
       if (labelEl) labelEl.textContent = labelOrig;
       if (arrowEl) arrowEl.style.opacity = '';
+    };
 
-      if (success) {
-        success.classList.add('show');
-        if (typeof gsap !== 'undefined') {
-          gsap.from(success, { opacity: 0, y: 14, duration: 0.4, ease: 'power2.out' });
-        }
-        setTimeout(() => success.classList.remove('show'), 6000);
+    const showError = (msg) => {
+      if (!errorEl) return;
+      if (errorMsg && msg) errorMsg.textContent = msg;
+      errorEl.classList.add('show');
+      if (typeof gsap !== 'undefined') {
+        gsap.from(errorEl, { opacity: 0, y: 12, duration: 0.4, ease: 'power2.out' });
       }
-    }, 1400);
+      setTimeout(() => errorEl.classList.remove('show'), 8000);
+    };
+
+    // Submit to Web3Forms via fetch — JSON response so we can handle UX in-page.
+    const formData = new FormData(form);
+
+    fetch(ENDPOINT, {
+      method: 'POST',
+      body: formData,
+      headers: { Accept: 'application/json' },
+    })
+      .then(async (res) => {
+        let data = null;
+        try { data = await res.json(); } catch (e) { /* non-JSON body */ }
+
+        if (res.ok && data && data.success) {
+          form.reset();
+          restoreButton();
+          if (success) {
+            success.classList.add('show');
+            if (typeof gsap !== 'undefined') {
+              gsap.from(success, { opacity: 0, y: 14, duration: 0.4, ease: 'power2.out' });
+            }
+            setTimeout(() => success.classList.remove('show'), 8000);
+          }
+          return;
+        }
+
+        // Provider returned an error (bad access key, validation, rate limit…)
+        restoreButton();
+        const msg = (data && (data.message || data.errors)) || 'Something went wrong — please try again.';
+        showError(typeof msg === 'string' ? msg : 'Submission failed — please try again or email admin@afterbeatsmusic.com.');
+      })
+      .catch(() => {
+        // Network failure / CORS / offline
+        restoreButton();
+        showError('We couldn’t reach the server. Check your connection or email admin@afterbeatsmusic.com.');
+      });
   });
 }
 

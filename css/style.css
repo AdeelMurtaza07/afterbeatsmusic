@@ -1634,6 +1634,37 @@ ul, ol { list-style: none; }
   color: var(--white-dim);
 }
 .form-success.show { display: flex; }
+
+/* Submission error (provider/network failure). Same shape as .form-success
+   but red-tinted. Shown by JS only when fetch fails or Web3Forms returns
+   success: false. */
+.form-error {
+  display: none;
+  align-items: center;
+  gap: 14px;
+  background: rgba(234, 56, 76, 0.08);
+  border: 1px solid rgba(234, 56, 76, 0.25);
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-top: 8px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.85);
+}
+.form-error.show { display: flex; }
+.form-error svg { flex-shrink: 0; }
+
+/* Honeypot — visually hidden from real users without using display:none
+   (some bots skip display:none fields). Off-screen and unfocusable. */
+.form-honeypot {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
 .form-error-msg {
   display: none;
   font-size: 11px;
