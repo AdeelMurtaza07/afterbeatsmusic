@@ -1100,42 +1100,34 @@ function initHofSphere() {
   };
   requestAnimationFrame(tick);
 
-  // ── Card click → open video modal (skip if user was dragging) ──
-  const modal     = qs('#hofVideoModal');
-  const iframe    = qs('#hofVideoIframe');
-  const closeBtn  = qs('#hofVideoClose');
-  const backdrop  = qs('#hofVideoBackdrop');
-  const fallback  = qs('#hofVideoFallback');
-
-  const openModal = (ytId) => {
-    if (!modal || !iframe || !ytId) return;
-    // Use canonical youtube.com/embed — nocookie variant is more restrictive
-    // for label-controlled music videos. Plain /embed has the widest support.
-    iframe.src = `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&playsinline=1`;
-    if (fallback) fallback.href = `https://www.youtube.com/watch?v=${ytId}`;
-    modal.classList.add('open');
-    modal.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-  };
-  const closeModal = () => {
-    if (!modal || !iframe) return;
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
-    iframe.src = '';
-    document.body.style.overflow = '';
+  // ── Card click → open YouTube in a new tab ──
+  // Embedded playback was unreliable: many label-controlled music videos block
+  // iframe embedding, so the modal would silently play nothing. Sending the
+  // user straight to youtube.com guarantees playback every time.
+  //
+  // Safe-redirect contract:
+  //  • Drag-vs-click guard preserved (dragDist > 6 = user was rotating).
+  //  • window.open called synchronously inside the click handler so it stays
+  //    inside the user-gesture window — pop-up blockers won't reject it.
+  //  • 'noopener,noreferrer' prevents tabnabbing on the new YouTube tab.
+  //  • `data-youtube` may be a bare video ID or a full URL — handle both.
+  //  • If the attribute is missing/empty, bail out silently.
+  const toWatchUrl = (val) => {
+    if (!val) return '';
+    const v = String(val).trim();
+    if (!v) return '';
+    // Already a URL? Use as-is.
+    if (/^https?:\/\//i.test(v)) return v;
+    return `https://www.youtube.com/watch?v=${encodeURIComponent(v)}`;
   };
 
   cards.forEach((card) => {
     card.addEventListener('click', () => {
-      if (dragDist > 6) return; // user was dragging, not clicking
-      openModal(card.dataset.youtube);
+      if (dragDist > 6) return; // user was rotating the sphere, not clicking
+      const url = toWatchUrl(card.dataset.youtube);
+      if (!url) return;
+      window.open(url, '_blank', 'noopener,noreferrer');
     });
-  });
-
-  closeBtn?.addEventListener('click', closeModal);
-  backdrop?.addEventListener('click', closeModal);
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && modal?.classList.contains('open')) closeModal();
   });
 }
 
