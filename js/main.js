@@ -14,6 +14,33 @@ if (typeof gsap !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
+/* ── Page-resource registry ────────────────────────────────
+   Every per-page init registers anything that survives past
+   the next Barba leave — IntersectionObservers, requestAnimationFrame
+   ticks, AbortControllers for window/document listeners. On the next
+   teardown call we disconnect them all. Without this, observers and
+   rAF loops from previous pages stack on every Barba transition and
+   the site gets slower the more you navigate.
+   ─────────────────────────────────────────────────────────── */
+const pageResources = {
+  observers: [],   // IntersectionObservers / MutationObservers
+  rafs:      [],   // requestAnimationFrame handles (numbers)
+  aborts:    [],   // AbortControllers
+};
+
+function registerObserver(obs)  { pageResources.observers.push(obs); return obs; }
+function registerRaf(id)        { pageResources.rafs.push(id);       return id;  }
+function registerAbort()        { const c = new AbortController(); pageResources.aborts.push(c); return c; }
+
+function teardownPageResources() {
+  pageResources.observers.forEach(o => { try { o.disconnect(); } catch (e) {} });
+  pageResources.rafs.forEach(id => { try { cancelAnimationFrame(id); } catch (e) {} });
+  pageResources.aborts.forEach(c => { try { c.abort(); } catch (e) {} });
+  pageResources.observers.length = 0;
+  pageResources.rafs.length      = 0;
+  pageResources.aborts.length    = 0;
+}
+
 /* ═══════════════════════════════════════════════════════════
    1.  LENIS SMOOTH SCROLL
    ═══════════════════════════════════════════════════════════ */
@@ -78,9 +105,10 @@ function initNav() {
   const mobile = qs('#mobileMenu');
   if (!nav) return;
 
-  // Sticky scroll class
+  // Sticky scroll class — bound via AbortController so Barba leave removes it
+  const navAbort = registerAbort();
   const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 20);
-  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('scroll', onScroll, { passive: true, signal: navAbort.signal });
   onScroll();
 
   // Mobile hamburger toggle
@@ -229,7 +257,7 @@ function initScrollReveal() {
   };
 
   // IntersectionObserver is the most reliable trigger mechanism
-  const io = new IntersectionObserver((entries) => {
+  const io = registerObserver(new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         reveal(entry.target);
@@ -239,7 +267,7 @@ function initScrollReveal() {
   }, {
     threshold: 0.08,
     rootMargin: '0px 0px -40px 0px',
-  });
+  }));
 
   els.forEach(el => io.observe(el));
 }
@@ -259,7 +287,7 @@ function initSlideInFromBottom() {
 
   const d = (el) => parseFloat(el.dataset.delay || 0) * 0.13;
 
-  const io = new IntersectionObserver((entries) => {
+  const io = registerObserver(new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
         const el  = entry.target;
@@ -276,7 +304,7 @@ function initSlideInFromBottom() {
         io.unobserve(el);
       }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.1 }));
 
   els.forEach(el => io.observe(el));
 }
@@ -290,7 +318,7 @@ function initParagraphReveal() {
     el.style.opacity   = '0';
     el.style.transform = 'translateY(36px)';
 
-    const io = new IntersectionObserver(([entry]) => {
+    const io = registerObserver(new IntersectionObserver(([entry]) => {
       if (!entry.isIntersecting) return;
       if (typeof gsap !== 'undefined') {
         el.style.transition = 'none';
@@ -301,7 +329,7 @@ function initParagraphReveal() {
         el.style.transform  = 'translateY(0)';
       }
       io.disconnect();
-    }, { threshold: 0.15 });
+    }, { threshold: 0.15 }));
 
     io.observe(el);
   });
@@ -479,7 +507,7 @@ function initShowcaseStrip() {
   // Per-card observer: only play the videos whose CARD is in the viewport.
   // Keeps live 4K decoders to roughly the on-screen count (~1–2) instead
   // of all 4 marquee duplicates.
-  const cardObserver = new IntersectionObserver(entries => {
+  const cardObserver = registerObserver(new IntersectionObserver(entries => {
     entries.forEach(entry => {
       const card = entry.target;
       const v = card.querySelector('video');
@@ -493,27 +521,30 @@ function initShowcaseStrip() {
   }, {
     root: null,
     threshold: 0.15,
-  });
+  }));
   qsa('.sc-item.sc-video', section).forEach(card => cardObserver.observe(card));
 
-  // Section observer: hard kill all decoders when the strip is fully off-screen.
-  const sectionObserver = new IntersectionObserver(([entry]) => {
+  // Section observer: hard kill all decoders when the strip is fully off-screen,
+  // and toggle .is-offscreen so the CSS marquee animation freezes too.
+  const sectionObserver = registerObserver(new IntersectionObserver(([entry]) => {
     sectionVisible = entry.isIntersecting;
+    section.classList.toggle('is-offscreen', !sectionVisible);
     if (!sectionVisible) videos.forEach(safePause);
     // When the section comes back, the per-card observer's next callback
     // will resume the visible ones.
-  }, { threshold: 0 });
+  }, { threshold: 0 }));
   sectionObserver.observe(section);
 
   // Pause the marquee on touch so mobile users can read individual cards
   const track = qs('.showcase-track', section);
   if (track) {
+    const sa = registerAbort();
     track.addEventListener('touchstart', () => {
       track.style.animationPlayState = 'paused';
-    }, { passive: true });
+    }, { passive: true, signal: sa.signal });
     track.addEventListener('touchend', () => {
       track.style.animationPlayState = '';
-    }, { passive: true });
+    }, { passive: true, signal: sa.signal });
   }
 }
 
@@ -562,13 +593,14 @@ function initStorySection() {
   // the transform-tweens don't wipe the CSS translate(-50%,-50%). Without this
   // the elements jump to the right/below center the moment GSAP applies scale
   // and the section reads as "all black" because everything is offscreen.
-  // Each flurry image starts FAR back in 3D space + blurred (depth-of-field).
-  // The parent .story-flurry has perspective: 1400px in CSS, so a translateZ
-  // of -1600 makes the image read as ~44% size from the camera — distant.
+  // Each flurry image starts FAR back in 3D space. translateZ + opacity carry
+  // the depth read on their own; we no longer animate `filter: blur(...)`
+  // because GPU-side blur tweening across 15 elements while a 4K video scales
+  // up was the single biggest scrub jank source on this page.
   // GSAP preserves the per-image CSS rotation (rotate(-4deg) etc.) because
   // it merges with the existing transform rather than replacing it.
   flurry.forEach((img) => {
-    gsap.set(img, { opacity: 0, z: -1600, filter: 'blur(10px)' });
+    gsap.set(img, { opacity: 0, z: -1600 });
   });
   gsap.set(h1,        { opacity: 0, scale: 0.92, xPercent: -50, yPercent: -50 });
   gsap.set(videoWrap, { opacity: 0, scale: 0.15, borderRadius: 14 });
@@ -583,6 +615,13 @@ function initStorySection() {
   // No JS pinning here — the section uses position:sticky in CSS for the
   // pin behaviour. ScrollTrigger only scrubs the timeline against scroll
   // progress through the 400vh of scrub-room inside the section.
+  // will-change is added to the flurry images only while the timeline is
+  // active (onEnter/onLeave) so the 15 compositor layers don't sit allocated
+  // while the user is far above or below the section.
+  const setLayers = (on) => {
+    flurry.forEach(img => { img.style.willChange = on ? 'transform, opacity' : ''; });
+    if (videoWrap) videoWrap.style.willChange = on ? 'transform, opacity, border-radius' : '';
+  };
   const tl = gsap.timeline({
     scrollTrigger: {
       trigger: story,
@@ -596,8 +635,10 @@ function initStorySection() {
         if (shouldPlay && video.paused) safePlay();
         else if (!shouldPlay && !video.paused) safePause();
       },
-      onLeave: safePause,
-      onLeaveBack: safePause,
+      onEnter:      () => setLayers(true),
+      onEnterBack:  () => setLayers(true),
+      onLeave:      () => { safePause(); setLayers(false); },
+      onLeaveBack:  () => { safePause(); setLayers(false); },
     },
   });
 
@@ -611,19 +652,17 @@ function initStorySection() {
   // reads as passing the camera. The CSS rotation per .sf-N is preserved.
   flurry.forEach((img, i) => {
     const t = 0.05 + (i / flurry.length) * 0.38;     // 5% → ~43%
-    // Approach — slow zoom-in from depth, focus pulls in
+    // Approach — slow zoom-in from depth
     tl.to(img, {
       opacity: 1,
       z: 0,
-      filter: 'blur(0px)',
       duration: 0.10,
       ease: 'power2.out',
     }, t);
-    // Pass-through — small forward drift + fade + slight motion blur
+    // Pass-through — small forward drift + fade
     tl.to(img, {
       opacity: 0,
       z: 300,
-      filter: 'blur(4px)',
       duration: 0.05,
       ease: 'power1.in',
     }, t + 0.11);
@@ -672,13 +711,22 @@ function initAutoplayBgVideos() {
     video.setAttribute('muted', '');
     const tryPlay = () => { const p = video.play(); if (p && p.catch) p.catch(() => {}); };
     tryPlay();
-    video.addEventListener('canplay', tryPlay, { once: true });
+    const ab = registerAbort();
+    video.addEventListener('canplay', tryPlay, { once: true, signal: ab.signal });
 
     if (!('IntersectionObserver' in window)) return;
-    const io = new IntersectionObserver(([entry]) => {
-      if (entry.isIntersecting) tryPlay();
+
+    // The closest section (final-CTA / contact-hero) is what carries the
+    // perpetual CSS zoom keyframes — toggling .is-offscreen on it freezes
+    // those keyframes (see style.css `.is-offscreen` rules) while also
+    // pausing the decoder.
+    const section = video.closest('section') || video.parentElement;
+    const io = registerObserver(new IntersectionObserver(([entry]) => {
+      const visible = entry.isIntersecting;
+      if (section) section.classList.toggle('is-offscreen', !visible);
+      if (visible) tryPlay();
       else { try { video.pause(); } catch (e) {} }
-    }, { threshold: 0.05 });
+    }, { threshold: 0.05 }));
     io.observe(video);
   });
 }
@@ -704,7 +752,20 @@ function initHeroVideo() {
       if (p && typeof p.catch === 'function') p.catch(() => {});
     };
     tryPlay();
-    video.addEventListener('canplay', tryPlay, { once: true });
+    const ab = registerAbort();
+    video.addEventListener('canplay', tryPlay, { once: true, signal: ab.signal });
+
+    // Pause the decoder + freeze the Ken Burns animation when hero leaves view.
+    // The CSS `.is-offscreen.hero-video` selector pauses the keyframe.
+    if ('IntersectionObserver' in window) {
+      const io = registerObserver(new IntersectionObserver(([entry]) => {
+        const visible = entry.isIntersecting;
+        hero.classList.toggle('is-offscreen', !visible);
+        if (visible) tryPlay();
+        else { try { video.pause(); } catch (e) {} }
+      }, { threshold: 0.01 }));
+      io.observe(hero);
+    }
   }
 
   // Staggered reveal of hero content
@@ -1008,6 +1069,7 @@ function initHofSphere() {
   let dragging = false, lx = 0, ly = 0;
   let idle = 0;
   let downX = 0, downY = 0, dragDist = 0;
+  let viewerVisible = true;   // gated by IO below
 
   const apply = () => {
     camera.style.transform = `rotateX(${pitch}deg) rotateY(${yaw}deg)`;
@@ -1047,20 +1109,42 @@ function initHofSphere() {
     viewer.classList.remove('dragging');
   };
 
-  viewer.addEventListener('mousedown',  onDown);
-  viewer.addEventListener('touchstart', onDown, { passive: true });
-  window.addEventListener('mousemove',  onMove);
-  window.addEventListener('touchmove',  onMove, { passive: true });
-  window.addEventListener('mouseup',    onUp);
-  window.addEventListener('touchend',   onUp);
-  window.addEventListener('touchcancel',onUp);
+  // All listeners bound via one AbortController so Barba leave removes them
+  // in a single call. Previously these were window-bound and never cleaned,
+  // so every visit to /hall-of-fame stacked a new mousemove/touchmove
+  // handler on window → the page got slower with each return.
+  const sa = registerAbort();
+  const opts = { signal: sa.signal };
+  const optsPassive = { signal: sa.signal, passive: true };
 
-  // Idle auto-rotation — resumes 1.5s after the last drag
+  viewer.addEventListener('mousedown',  onDown, opts);
+  viewer.addEventListener('touchstart', onDown, optsPassive);
+  window.addEventListener('mousemove',  onMove, opts);
+  window.addEventListener('touchmove',  onMove, optsPassive);
+  window.addEventListener('mouseup',    onUp,   opts);
+  window.addEventListener('touchend',   onUp,   opts);
+  window.addEventListener('touchcancel',onUp,   opts);
+
+  // Gate the idle auto-rotation rAF behind viewport visibility. If the
+  // sphere isn't on screen, there's no point spending a frame to rotate it.
+  if ('IntersectionObserver' in window) {
+    const io = registerObserver(new IntersectionObserver(([entry]) => {
+      viewerVisible = entry.isIntersecting;
+    }, { threshold: 0.05 }));
+    io.observe(viewer);
+  }
+
+  // Idle auto-rotation — resumes 1.5s after the last drag.
+  // The loop self-terminates on three conditions:
+  //   • the AbortController has been aborted (teardownPageResources),
+  //   • the viewer element has been detached from the DOM (Barba swap), or
+  //   • the document was hidden (tab background) — visibilitychange resumes it.
   let last = performance.now();
   const tick = (now) => {
+    if (sa.signal.aborted || !viewer.isConnected) return;
     const dt = Math.min(0.05, (now - last) / 1000);
     last = now;
-    if (!dragging) {
+    if (!dragging && viewerVisible && !document.hidden) {
       idle += dt;
       if (idle > 1.5) {
         yaw += 4 * dt; // ~4°/sec
@@ -1123,6 +1207,7 @@ function initContactParallax() {
    15. ANCHOR SMOOTH SCROLL
    ═══════════════════════════════════════════════════════════ */
 function initAnchorScroll() {
+  const ab = registerAbort();
   qsa('a[href^="#"]').forEach(link => {
     link.addEventListener('click', (e) => {
       const id     = link.getAttribute('href').slice(1);
@@ -1145,7 +1230,7 @@ function initAnchorScroll() {
         toggle?.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = '';
       }
-    });
+    }, { signal: ab.signal });
   });
 }
 
@@ -1172,6 +1257,12 @@ function initBarba() {
       name: 'crossfade',
       async leave() {
         if (overlay) await gsap.to(overlay, { opacity: 1, duration: 0.3, ease: 'power2.in' });
+        // Tear down everything from the outgoing page before the container is
+        // removed. initPageScripts will run again on enter and re-bind for the
+        // incoming page, but doing it here means observers attached to the
+        // outgoing nodes are gone before the DOM nodes themselves are gone —
+        // no stray callbacks firing during the swap.
+        teardownPageResources();
       },
       async enter() {
         window.scrollTo(0, 0);
@@ -1180,10 +1271,11 @@ function initBarba() {
         if (overlay) await gsap.to(overlay, { opacity: 0, duration: 0.4, ease: 'power2.out', delay: 0.05 });
       },
     }],
-    views: [{
-      namespace: 'home',
-      afterEnter() { initHeroVideo(); initManifesto(); initShowcaseStrip(); initStorySection(); },
-    }],
+    // (Previously a `views[home].afterEnter` block re-ran initHeroVideo /
+    //  initManifesto / initShowcaseStrip / initStorySection — but those same
+    //  initX functions are already invoked from initPageScripts when their
+    //  markers exist on the page, so the home view was double-initing every
+    //  Barba transition into / back to /. Removed.)
   });
 }
 
@@ -1193,10 +1285,16 @@ function initBarba() {
        Barba page transition.
    ═══════════════════════════════════════════════════════════ */
 function initPageScripts() {
-  // Kill stale ScrollTriggers from previous page
+  // Kill everything left over from the previous page first:
+  //   • ScrollTriggers (GSAP)
+  //   • IntersectionObservers + window/document listeners (via AbortControllers)
+  //   • requestAnimationFrame loops registered by the previous page
+  // This is what prevents the "site gets slower with every Barba navigation"
+  // failure mode — old observers and rAFs no longer stack indefinitely.
   if (typeof ScrollTrigger !== 'undefined') {
     ScrollTrigger.getAll().forEach(st => st.kill());
   }
+  teardownPageResources();
 
   initNav();
   initScrollReveal();
