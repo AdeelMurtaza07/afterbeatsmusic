@@ -353,42 +353,6 @@ function initTrustedScroller() {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   10. AUDIO CONTROL BUTTON  (toggles hero video mute)
-   ═══════════════════════════════════════════════════════════ */
-function initAudioControl() {
-  const btn   = qs('#audioBtn');
-  const video = qs('#heroVideo');
-  if (!btn) return;
-
-  let enabled = false;
-
-  const iconOn  = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`;
-  const iconOff = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/></svg>`;
-
-  btn.addEventListener('click', () => {
-    enabled = !enabled;
-    if (video) {
-      video.muted = !enabled;
-      if (enabled) {
-        // Some browsers pause when toggling muted; ensure playback resumes
-        const p = video.play();
-        if (p && typeof p.catch === 'function') p.catch(() => {});
-      }
-    }
-    btn.innerHTML = enabled
-      ? `${iconOff}<span class="audio-btn-label">Disable Sound</span>`
-      : `${iconOn}<span class="audio-btn-label">Enable Sound</span>`;
-    btn.setAttribute('aria-label', enabled ? 'Disable sound' : 'Enable sound');
-  });
-
-  // Slide-in entrance
-  const ctrl = qs('#audioControl');
-  if (ctrl && typeof gsap !== 'undefined') {
-    gsap.from(ctrl, { opacity: 0, y: 20, duration: 0.7, delay: 1.5, ease: 'power2.out' });
-  }
-}
-
-/* ═══════════════════════════════════════════════════════════
    10a. MANIFESTO — quote + word-split scroll reveal + CTA/team
    ═══════════════════════════════════════════════════════════ */
 function initManifesto() {
@@ -807,10 +771,12 @@ function initDemoForm() {
   const errorMsg  = qs('#formErrorMsg');
   if (!form) return;
 
-  // Web3Forms endpoint. The form's action attribute points here too — JS just
-  // intercepts to give us in-page UX (loading state, JSON response handling)
-  // instead of a full-page redirect.
-  const ENDPOINT = form.getAttribute('action') || 'https://api.web3forms.com/submit';
+  // Netlify Forms endpoint. POSTing to the page's own origin (we use "/" for
+  // simplicity) is what Netlify's request handler intercepts on its CDN. The
+  // form's <form action="/"> is the no-JS fallback — JS hijacks the submit so
+  // we can show in-page loading / success / error states instead of a full
+  // page redirect.
+  const ENDPOINT = '/';
 
   // The button has a <span class="form-submit-label"> + an arrow SVG. We only
   // want to swap the label text on submit, so write the original aside for restore.
@@ -879,10 +845,10 @@ function initDemoForm() {
       return;
     }
 
-    // Honeypot short-circuit. If the hidden `botcheck` field has any value,
-    // a bot filled it — silently pretend we sent and bail out. Web3Forms also
-    // drops these server-side; this just saves the round trip.
-    const honeypot = form.querySelector('input[name="botcheck"]');
+    // Honeypot short-circuit. If the hidden `bot-field` has any value, a bot
+    // filled it — silently pretend we sent and bail out. Netlify also drops
+    // these server-side; this just saves the round trip.
+    const honeypot = form.querySelector('input[name="bot-field"]');
     if (honeypot && honeypot.value.trim() !== '') {
       form.reset();
       return;
@@ -910,19 +876,23 @@ function initDemoForm() {
       setTimeout(() => errorEl.classList.remove('show'), 8000);
     };
 
-    // Submit to Web3Forms via fetch — JSON response so we can handle UX in-page.
-    const formData = new FormData(form);
+    // Submit to Netlify via fetch. Netlify's AJAX contract requires
+    // application/x-www-form-urlencoded — multipart FormData is silently
+    // ignored for non-file forms. URLSearchParams + FormData handles this
+    // (FormData iterates as [name, value] pairs that URLSearchParams accepts).
+    // The body automatically includes the hidden `form-name` field, which is
+    // mandatory for Netlify to route the submission to the right form.
+    //
+    // Success = HTTP 200 with an empty body; no JSON to parse.
+    const body = new URLSearchParams(new FormData(form)).toString();
 
     fetch(ENDPOINT, {
       method: 'POST',
-      body: formData,
-      headers: { Accept: 'application/json' },
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
     })
-      .then(async (res) => {
-        let data = null;
-        try { data = await res.json(); } catch (e) { /* non-JSON body */ }
-
-        if (res.ok && data && data.success) {
+      .then((res) => {
+        if (res.ok) {
           form.reset();
           restoreButton();
           if (success) {
@@ -935,10 +905,11 @@ function initDemoForm() {
           return;
         }
 
-        // Provider returned an error (bad access key, validation, rate limit…)
+        // Netlify returned a non-2xx status (form not registered, validation
+        // failure, rate-limited, or — during local dev — the static server
+        // doesn't accept POSTs).
         restoreButton();
-        const msg = (data && (data.message || data.errors)) || 'Something went wrong — please try again.';
-        showError(typeof msg === 'string' ? msg : 'Submission failed — please try again or email admin@afterbeatsmusic.com.');
+        showError('Submission failed — please try again, or email us directly at admin@afterbeatsmusic.com.');
       })
       .catch(() => {
         // Network failure / CORS / offline
@@ -1233,7 +1204,6 @@ function initPageScripts() {
   initParagraphReveal();
   initAvatarAnimations();
   initTrustedScroller();
-  initAudioControl();
   initDemoForm();
   initArticlesSort();
   initHofSphere();
