@@ -1089,9 +1089,10 @@ ul, ol { list-style: none; }
   object-fit: cover;
   opacity: 0;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
-  will-change: transform, opacity, filter;
   backface-visibility: hidden;
-  /* z is animated by GSAP — no transform here so we don't fight it */
+  /* z is animated by GSAP — no transform here so we don't fight it.
+     will-change is added by JS only while the story timeline is active,
+     so 15 permanent compositor layers don't sit idle off-screen. */
 }
 
 /* 15 scattered positions + sizes + tilts — designed around the centered headline */
@@ -2923,7 +2924,10 @@ ul, ol { list-style: none; }
   justify-content: space-between;
   cursor: pointer;
   transition: filter 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
-  will-change: transform, opacity;
+  /* will-change intentionally omitted — promoting 30 cards permanently uses
+     ~30 GPU layers' worth of memory for no win. The camera parent
+     (.hof-camera) is the only element that actually transforms; promoting
+     the parent is enough for the children to ride along in 3D. */
 }
 .hof3d-card::before {
   content: '';
@@ -2952,10 +2956,11 @@ ul, ol { list-style: none; }
   color: rgba(255,255,255,0.85);
   align-self: flex-start;
   padding: 5px 10px;
-  background: rgba(0,0,0,0.45);
+  /* Slightly more opaque flat fill replaces backdrop-filter: blur(6px) which
+     ran 30 times — once per sphere card — every frame the sphere rotates. */
+  background: rgba(0,0,0,0.62);
   border: 1px solid rgba(255,255,255,0.15);
   border-radius: 999px;
-  backdrop-filter: blur(6px);
 }
 .hof3d-meta { margin-top: auto; }
 .hof3d-title {
@@ -3178,3 +3183,40 @@ ul, ol { list-style: none; }
   to   { transform: rotate(360deg); }
 }
 .is-spinning { animation: spin 0.8s linear infinite; }
+
+/* ---------- Reduced-motion + off-screen pause ----------
+   Perpetual keyframe animations (Ken Burns on hero, contact, final-CTA;
+   marquees; soundwave; pulse loops) are pure decoration. When the user
+   prefers reduced motion OR a video element is .is-offscreen (toggled
+   by the JS IntersectionObservers), we freeze them so the GPU isn't
+   compositing animation frames that nobody can see.
+*/
+@media (prefers-reduced-motion: reduce) {
+  .hero-video-bg video,
+  .contact-hero-video,
+  .final-cta-bg video,
+  .contact-video-sim::before,
+  .demo-brand-mark,
+  .footer-decor-mark,
+  .manifesto-quote,
+  .hp-logo,
+  .showcase-track,
+  .hero-partners-track,
+  .loader-logo,
+  .sc-item.sc-video::before,
+  .sound-wave .bar,
+  .hero-scroll-dot {
+    animation: none !important;
+  }
+}
+
+/* JS adds .is-offscreen to a parent wrapper when the section leaves the
+   viewport, so its perpetual decorative animation freezes. */
+.is-offscreen .hero-partners-track,
+.is-offscreen.hero-video .hero-video-bg video,
+.is-offscreen .showcase-track,
+.is-offscreen .sc-item.sc-video::before,
+.is-offscreen .contact-hero-video,
+.is-offscreen .final-cta-bg video {
+  animation-play-state: paused !important;
+}
