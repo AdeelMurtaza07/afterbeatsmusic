@@ -261,6 +261,39 @@ small.
 
 ---
 
+## 3a. Team faces (`assets/team/1.jpg` … `9.jpg`)
+
+The 9 face photos total ~14 MB but render in circles between 28 px and 56 px.
+Each is decoding a 2–3 MP source for a tiny slot. Crop + downscale to a square
+400 × 400 (covers 3× retina on the largest 56 px slot with headroom) and the
+total drops to ~400 KB.
+
+```powershell
+mkdir _backup\team-original
+Copy-Item assets\team\*.* _backup\team-original\
+
+# Re-encode each .jpg / .avif source to a centered 400x400 JPG at q4 (~50 KB).
+# force_original_aspect_ratio=increase + crop=400:400 = "scale to cover, then
+# center-crop to exact 400x400" — same crop behaviour as background-size:cover.
+for ($i = 1; $i -le 9; $i++) {
+  $src = Get-ChildItem "assets\team" -Filter "$i.*" | Select-Object -First 1
+  if (-not $src) { continue }
+  ffmpeg -y -i $src.FullName `
+    -vf "scale=400:400:force_original_aspect_ratio=increase,crop=400:400" `
+    -q:v 4 "assets\team\$i-tmp.jpg"
+  Remove-Item $src.FullName
+  Rename-Item "assets\team\$i-tmp.jpg" "$i.jpg"
+}
+```
+
+Then in `css/style.css` change the one .avif reference back to .jpg:
+
+```css
+.ta-4 { background-image: url('../assets/team/4.jpg'); background-color: #1a0d00; }
+```
+
+---
+
 ## 4. Optional: AVIF for sphere images
 
 If you want to push further, the 6 sphere JPGs encode brilliantly to AVIF
@@ -279,12 +312,13 @@ Get-ChildItem -Recurse assets, images -Include *.mp4, *.webm, *.jpg, *.jpeg, *.p
   ForEach-Object { "{0:N1} MB" -f ($_.Sum / 1MB) }
 ```
 
-Expected after all of section 1 and 3:
+Expected after all of section 1, 3, and 3a:
 - `assets/videos/` 53 MB → ~7 MB
 - `images/` (4K mp4 + 6 multi-MB JPGs) 22 MB → ~3 MB
 - `assets/5Pics/` 4 MB → ~600 KB
+- `assets/team/` 14 MB → ~400 KB
 
-Total: ~85 MB → ~12 MB across all encodable media.
+Total: ~99 MB → ~12 MB across all encodable media.
 
 ---
 
