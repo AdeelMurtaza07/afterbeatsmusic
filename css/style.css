@@ -2097,6 +2097,8 @@ ul, ol { list-style: none; }
   transform: translateY(-56px);
 }
 .contact-tile {
+  display: block;
+  text-decoration: none;
   background: var(--glass-light);
   border: 1px solid var(--border-med);
   border-radius: var(--radius-lg);
